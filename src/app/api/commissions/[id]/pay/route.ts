@@ -5,7 +5,7 @@ import { NextResponse } from "next/server"
 // POST /api/commissions/[id]/pay - Mark commission as paid
 export async function POST(
     request: Request,
-    { params }: { params: Promise<{ id: string }> }
+    props: { params: Promise<{ id: string }> }
 ) {
     const session = await auth()
     if (!session) {
@@ -18,7 +18,7 @@ export async function POST(
     }
 
     try {
-        const { id } = await params
+        const { id } = await props.params
 
         const commission = await prisma.commission.findUnique({
             where: { id }

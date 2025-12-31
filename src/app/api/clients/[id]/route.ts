@@ -14,7 +14,7 @@ export async function GET(
 
     const { id } = await props.params
 
-    const barber = await prisma.barber.findUnique({
+    const client = await prisma.client.findUnique({
       where: { id: parseInt(id) },
       include: {
         appointments: {
@@ -24,18 +24,18 @@ export async function GET(
       },
     })
 
-    if (!barber) {
+    if (!client) {
       return NextResponse.json(
-        { error: "Peluquero no encontrado" },
+        { error: "Cliente no encontrado" },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(barber)
+    return NextResponse.json(client)
   } catch (error) {
-    console.error("Error fetching barber:", error)
+    console.error("Error fetching client:", error)
     return NextResponse.json(
-      { error: "Error al obtener peluquero" },
+      { error: "Error al obtener cliente" },
       { status: 500 }
     )
   }
@@ -53,24 +53,23 @@ export async function PUT(
 
     const { id } = await props.params
     const data = await request.json()
-    const { name, email, phone, specialization, active } = data
+    const { name, email, phone, status } = data
 
-    const barber = await prisma.barber.update({
+    const client = await prisma.client.update({
       where: { id: parseInt(id) },
       data: {
         ...(name && { name }),
-        ...(email && { email }),
-        ...(phone !== undefined && { phone }),
-        ...(specialization && { specialization }),
-        ...(active !== undefined && { active }),
+        ...(email !== undefined && { email }),
+        ...(phone && { phone }),
+        ...(status && { status }),
       },
     })
 
-    return NextResponse.json(barber)
+    return NextResponse.json(client)
   } catch (error) {
-    console.error("Error updating barber:", error)
+    console.error("Error updating client:", error)
     return NextResponse.json(
-      { error: "Error al actualizar peluquero" },
+      { error: "Error al actualizar cliente" },
       { status: 500 }
     )
   }
@@ -88,15 +87,15 @@ export async function DELETE(
 
     const { id } = await props.params
 
-    await prisma.barber.delete({
+    await prisma.client.delete({
       where: { id: parseInt(id) },
     })
 
-    return NextResponse.json({ message: "Peluquero eliminado" })
+    return NextResponse.json({ message: "Cliente eliminado" })
   } catch (error) {
-    console.error("Error deleting barber:", error)
+    console.error("Error deleting client:", error)
     return NextResponse.json(
-      { error: "Error al eliminar peluquero" },
+      { error: "Error al eliminar cliente" },
       { status: 500 }
     )
   }

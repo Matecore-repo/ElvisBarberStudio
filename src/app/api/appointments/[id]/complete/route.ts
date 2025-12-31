@@ -6,7 +6,7 @@ import { Decimal } from "@prisma/client/runtime/library"
 // POST /api/appointments/[id]/complete - Complete appointment and create commission
 export async function POST(
     request: Request,
-    { params }: { params: Promise<{ id: string }> }
+    props: { params: Promise<{ id: string }> }
 ) {
     const session = await auth()
     if (!session) {
@@ -14,7 +14,7 @@ export async function POST(
     }
 
     try {
-        const { id } = await params
+        const { id } = await props.params
         const body = await request.json()
         const { barberId, totalAmount } = body
 

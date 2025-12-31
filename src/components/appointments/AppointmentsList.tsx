@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { Appointment, Client, Service, Barber } from "@prisma/client"
+import { User, CheckCircle, X } from "lucide-react"
 
 type AppointmentWithRelations = Appointment & {
   client: Client | null
@@ -144,9 +145,7 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="flex items-start gap-4 min-w-0">
                     <div className="w-12 h-12 rounded-xl bg-accent/15 flex items-center justify-center shrink-0">
-                      <span className="text-xl" aria-hidden="true">
-                        👤
-                      </span>
+                      <User className="w-6 h-6 text-accent" />
                     </div>
                     <div className="min-w-0">
                       <h3 className="font-bold truncate">{appointment.client?.name || "Cliente sin nombre"}</h3>
@@ -201,8 +200,8 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
                   {selectedServiceName} · {selectedClientName}
                 </p>
               </div>
-              <button type="button" className="btn-ghost min-h-10 px-3" onClick={closeModal} aria-label="Cerrar">
-                ✕
+              <button type="button" className="btn-ghost p-2 rounded-lg" onClick={closeModal} aria-label="Cerrar">
+                <X className="w-5 h-5" />
               </button>
             </div>
 

@@ -13,30 +13,34 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1")
     const limit = parseInt(searchParams.get("limit") || "10")
     const search = searchParams.get("search") || ""
-    const active = searchParams.get("active")
+    const status = searchParams.get("status")
 
     const skip = (page - 1) * limit
+
     const where: any = {}
-
     if (search) {
-      where.name = { contains: search, mode: "insensitive" }
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { email: { contains: search, mode: "insensitive" } },
+        { phone: { contains: search, mode: "insensitive" } },
+      ]
     }
-    if (active !== null && active !== undefined) {
-      where.active = active === "true"
+    if (status && status !== "all") {
+      where.status = status
     }
 
-    const [barbers, total] = await Promise.all([
-      prisma.barber.findMany({
+    const [clients, total] = await Promise.all([
+      prisma.client.findMany({
         where,
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
       }),
-      prisma.barber.count({ where }),
+      prisma.client.count({ where }),
     ])
 
     return NextResponse.json({
-      data: barbers,
+      data: clients,
       pagination: {
         page,
         limit,
@@ -45,9 +49,9 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error("Error fetching barbers:", error)
+    console.error("Error fetching clients:", error)
     return NextResponse.json(
-      { error: "Error al obtener peluqueros" },
+      { error: "Error al obtener clientes" },
       { status: 500 }
     )
   }
@@ -61,30 +65,29 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await request.json()
-    const { name, email, phone, specialization, active } = data
+    const { name, email, phone, status } = data
 
-    if (!name || !email) {
+    if (!name || !phone) {
       return NextResponse.json(
-        { error: "Nombre y email son requeridos" },
+        { error: "Nombre y teléfono son requeridos" },
         { status: 400 }
       )
     }
 
-    const barber = await prisma.barber.create({
+    const client = await prisma.client.create({
       data: {
         name,
-        email,
-        phone: phone || null,
-        specialization: specialization || "Barbería General",
-        active: active !== false,
+        email: email || null,
+        phone,
+        status: status || "active",
       },
     })
 
-    return NextResponse.json(barber, { status: 201 })
+    return NextResponse.json(client, { status: 201 })
   } catch (error) {
-    console.error("Error creating barber:", error)
+    console.error("Error creating client:", error)
     return NextResponse.json(
-      { error: "Error al crear peluquero" },
+      { error: "Error al crear cliente" },
       { status: 500 }
     )
   }

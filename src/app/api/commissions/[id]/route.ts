@@ -14,28 +14,26 @@ export async function GET(
 
     const { id } = await props.params
 
-    const barber = await prisma.barber.findUnique({
+    const commission = await prisma.commission.findUnique({
       where: { id: parseInt(id) },
       include: {
-        appointments: {
-          orderBy: { createdAt: "desc" },
-          take: 10,
-        },
+        barber: true,
+        appointment: true,
       },
     })
 
-    if (!barber) {
+    if (!commission) {
       return NextResponse.json(
-        { error: "Peluquero no encontrado" },
+        { error: "Comisión no encontrada" },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(barber)
+    return NextResponse.json(commission)
   } catch (error) {
-    console.error("Error fetching barber:", error)
+    console.error("Error fetching commission:", error)
     return NextResponse.json(
-      { error: "Error al obtener peluquero" },
+      { error: "Error al obtener comisión" },
       { status: 500 }
     )
   }
@@ -53,24 +51,24 @@ export async function PUT(
 
     const { id } = await props.params
     const data = await request.json()
-    const { name, email, phone, specialization, active } = data
+    const { amount, status } = data
 
-    const barber = await prisma.barber.update({
+    const commission = await prisma.commission.update({
       where: { id: parseInt(id) },
       data: {
-        ...(name && { name }),
-        ...(email && { email }),
-        ...(phone !== undefined && { phone }),
-        ...(specialization && { specialization }),
-        ...(active !== undefined && { active }),
+        ...(amount && { amount: parseFloat(amount) }),
+        ...(status && { status }),
+      },
+      include: {
+        barber: true,
       },
     })
 
-    return NextResponse.json(barber)
+    return NextResponse.json(commission)
   } catch (error) {
-    console.error("Error updating barber:", error)
+    console.error("Error updating commission:", error)
     return NextResponse.json(
-      { error: "Error al actualizar peluquero" },
+      { error: "Error al actualizar comisión" },
       { status: 500 }
     )
   }
@@ -88,15 +86,15 @@ export async function DELETE(
 
     const { id } = await props.params
 
-    await prisma.barber.delete({
+    await prisma.commission.delete({
       where: { id: parseInt(id) },
     })
 
-    return NextResponse.json({ message: "Peluquero eliminado" })
+    return NextResponse.json({ message: "Comisión eliminada" })
   } catch (error) {
-    console.error("Error deleting barber:", error)
+    console.error("Error deleting commission:", error)
     return NextResponse.json(
-      { error: "Error al eliminar peluquero" },
+      { error: "Error al eliminar comisión" },
       { status: 500 }
     )
   }

@@ -14,28 +14,26 @@ export async function GET(
 
     const { id } = await props.params
 
-    const barber = await prisma.barber.findUnique({
+    const appointment = await prisma.appointment.findUnique({
       where: { id: parseInt(id) },
       include: {
-        appointments: {
-          orderBy: { createdAt: "desc" },
-          take: 10,
-        },
+        client: true,
+        barber: true,
       },
     })
 
-    if (!barber) {
+    if (!appointment) {
       return NextResponse.json(
-        { error: "Peluquero no encontrado" },
+        { error: "Turno no encontrado" },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(barber)
+    return NextResponse.json(appointment)
   } catch (error) {
-    console.error("Error fetching barber:", error)
+    console.error("Error fetching appointment:", error)
     return NextResponse.json(
-      { error: "Error al obtener peluquero" },
+      { error: "Error al obtener turno" },
       { status: 500 }
     )
   }
@@ -53,24 +51,27 @@ export async function PUT(
 
     const { id } = await props.params
     const data = await request.json()
-    const { name, email, phone, specialization, active } = data
+    const { date, time, service, status } = data
 
-    const barber = await prisma.barber.update({
+    const appointment = await prisma.appointment.update({
       where: { id: parseInt(id) },
       data: {
-        ...(name && { name }),
-        ...(email && { email }),
-        ...(phone !== undefined && { phone }),
-        ...(specialization && { specialization }),
-        ...(active !== undefined && { active }),
+        ...(date && { date: new Date(date) }),
+        ...(time && { time }),
+        ...(service && { service }),
+        ...(status && { status }),
+      },
+      include: {
+        client: true,
+        barber: true,
       },
     })
 
-    return NextResponse.json(barber)
+    return NextResponse.json(appointment)
   } catch (error) {
-    console.error("Error updating barber:", error)
+    console.error("Error updating appointment:", error)
     return NextResponse.json(
-      { error: "Error al actualizar peluquero" },
+      { error: "Error al actualizar turno" },
       { status: 500 }
     )
   }
@@ -88,15 +89,15 @@ export async function DELETE(
 
     const { id } = await props.params
 
-    await prisma.barber.delete({
+    await prisma.appointment.delete({
       where: { id: parseInt(id) },
     })
 
-    return NextResponse.json({ message: "Peluquero eliminado" })
+    return NextResponse.json({ message: "Turno eliminado" })
   } catch (error) {
-    console.error("Error deleting barber:", error)
+    console.error("Error deleting appointment:", error)
     return NextResponse.json(
-      { error: "Error al eliminar peluquero" },
+      { error: "Error al eliminar turno" },
       { status: 500 }
     )
   }
