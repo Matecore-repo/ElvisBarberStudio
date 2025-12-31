@@ -1,0 +1,201 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== AUTH.JS MODELS ====================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ==================== BUSINESS MODELS ====================
+
+enum UserRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  passwordHash  String?   @map("password_hash")
+  role          UserRole  @default(STAFF)
+  salonId       String?   @map("salon_id")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  accounts              Account[]
+  sessions              Session[]
+  salon                 Salon?        @relation(fields: [salonId], references: [id])
+  completedAppointments Appointment[] @relation("CompletedByUser")
+
+  @@map("users")
+}
+
+model Salon {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  phone     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  users        User[]
+  barbers      Barber[]
+  clients      Client[]
+  services     Service[]
+  appointments Appointment[]
+  commissions  Commission[]
+
+  @@map("salons")
+}
+
+enum CommissionType {
+  PERCENT
+  FIXED
+}
+
+model Barber {
+  id              String         @id @default(cuid())
+  salonId         String         @map("salon_id")
+  name            String
+  commissionType  CommissionType @default(PERCENT) @map("commission_type")
+  commissionValue Decimal        @default(0) @map("commission_value") @db.Decimal(10, 2)
+  active          Boolean        @default(true)
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  salon        Salon         @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+  commissions  Commission[]
+
+  @@map("barbers")
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  salonId   String   @map("salon_id")
+  name      String
+  phone     String?
+  notes     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  salon        Salon         @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+
+  @@map("clients")
+}
+
+model Service {
+  id              String   @id @default(cuid())
+  salonId         String   @map("salon_id")
+  name            String
+  durationMinutes Int      @default(30) @map("duration_minutes")
+  price           Decimal  @db.Decimal(10, 2)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  salon        Salon         @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+
+  @@map("services")
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELED
+}
+
+model Appointment {
+  id                String            @id @default(cuid())
+  salonId           String            @map("salon_id")
+  clientId          String?           @map("client_id")
+  serviceId         String?           @map("service_id")
+  barberId          String?           @map("barber_id")
+  scheduledStart    DateTime          @map("scheduled_start")
+  scheduledEnd      DateTime          @map("scheduled_end")
+  status            AppointmentStatus @default(SCHEDULED)
+  totalAmount       Decimal?          @map("total_amount") @db.Decimal(10, 2)
+  completedAt       DateTime?         @map("completed_at")
+  completedByUserId String?           @map("completed_by_user_id")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+
+  salon         Salon       @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  client        Client?     @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  service       Service?    @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  barber        Barber?     @relation(fields: [barberId], references: [id], onDelete: SetNull)
+  completedBy   User?       @relation("CompletedByUser", fields: [completedByUserId], references: [id], onDelete: SetNull)
+  commission    Commission?
+
+  @@map("appointments")
+}
+
+enum CommissionStatus {
+  PENDING
+  PAID
+}
+
+model Commission {
+  id            String           @id @default(cuid())
+  salonId       String           @map("salon_id")
+  appointmentId String           @unique @map("appointment_id")
+  barberId      String           @map("barber_id")
+  amount        Decimal          @db.Decimal(10, 2)
+  status        CommissionStatus @default(PENDING)
+  paidAt        DateTime?        @map("paid_at")
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+
+  salon       Salon       @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  barber      Barber      @relation(fields: [barberId], references: [id], onDelete: Cascade)
+
+  @@map("commissions")
+}

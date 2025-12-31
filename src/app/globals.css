@@ -1,26 +1,239 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Luxury Heritage Palette */
+  --background: #050505;
+  /* Deep Black */
+  --background-alt: #0F0F0F;
+  /* Charcoal */
+  --foreground: #E5E5E5;
+  /* Off-white / Silver */
+  --foreground-muted: #888888;
+  /* Warm Gray */
+
+  /* Cards & Surfaces */
+  --card: #121212;
+  --card-hover: #1A1A1A;
+  --sidebar: #0A0A0A;
+
+  /* Accent - Muted Gold */
+  --accent: #C9A44C;
+  --accent-hover: #D4B366;
+  --accent-muted: rgba(201, 164, 76, 0.15);
+
+  /* Typography */
+  --font-serif: var(--font-playfair), 'Georgia', serif;
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(201, 164, 76, 0.3);
+
+  /* Status Colors */
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #3B82F6;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-background: #050505;
+  --color-background-alt: #0F0F0F;
+  --color-foreground: #E5E5E5;
+  --color-foreground-muted: #888888;
+  --color-card: #121212;
+  --color-card-hover: #1A1A1A;
+  --color-sidebar: #0A0A0A;
+  --color-accent: #C9A44C;
+  --color-accent-hover: #D4B366;
+  --color-accent-muted: rgb(201 164 76 / 0.15);
+  --color-border: rgb(255 255 255 / 0.08);
+  --color-border-strong: rgb(201 164 76 / 0.3);
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+      "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    line-height: 1.5;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--accent) 50%, transparent);
+    outline-offset: 2px;
   }
 }
 
-body {
+.container-app {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.card {
+  @apply rounded-xl border bg-card p-5 sm:p-6;
+  border-color: var(--border);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.btn {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold;
+  transition: transform 120ms ease, background-color 160ms ease,
+    border-color 160ms ease, color 160ms ease, box-shadow 160ms ease,
+    opacity 160ms ease;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold;
+  background: var(--accent);
+  color: #000;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 10px 24px rgba(201, 164, 76, 0.14);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 16px 36px rgba(201, 164, 76, 0.22);
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--foreground);
+}
+
+.btn-secondary:hover {
+  background: var(--card-hover);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-ghost {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold;
+  background: transparent;
+  color: var(--foreground);
+}
+
+.btn-ghost:hover {
+  background: var(--card-hover);
+}
+
+.btn-ghost:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.input {
+  @apply min-h-11 w-full rounded-lg border px-3 py-2 text-sm;
+  border-color: var(--border);
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  transition: border-color 160ms ease, box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 0 0 3px var(--accent-muted);
+}
+
+.input::placeholder {
+  color: var(--foreground-muted);
+}
+
+.badge {
+  @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(26, 26, 26, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+/* Gold gradient text */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #C9A44C 0%, #E5C97B 50%, #C9A44C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .input {
+    transition: none !important;
+  }
+
+  .btn-primary:hover {
+    transform: none;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--card);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+/* Barber pole animation */
+@keyframes barberpole {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(80px);
+  }
 }

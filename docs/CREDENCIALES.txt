@@ -1,0 +1,68 @@
+================================================================================
+                    CREDENCIALES Y CONFIGURACIÓN
+================================================================================
+
+USUARIO Y CONTRASEÑA POR DEFECTO:
+==========================================
+
+Database User: neondb_owner
+Database Password: [GENERADA AUTOMÁTICAMENTE POR NEON]
+
+IMPORTANTE: Neon genera la contraseña por ti. Solo cópiala del panel.
+
+================================================================================
+ARCHIVO .env.local (EJEMPLO)
+================================================================================
+
+Crea este archivo en: C:\Users\Matecore\Downloads\ElvisBarberStudio\.env.local
+
+---
+
+# Database (Neon PostgreSQL)
+DATABASE_URL=postgresql://neondb_owner:TuPasswordAqui@ep-cold-wave-123.us-east-1.neon.tech/neondb
+
+# NextAuth
+NEXTAUTH_SECRET=AbC123DefGHIJKLmnoPQRstUVWxyz789+ABCDEFGH/Ij=
+NEXTAUTH_URL=http://localhost:3000
+
+---
+
+================================================================================
+GENERAR NEXTAUTH_SECRET
+================================================================================
+
+En PowerShell, ejecuta:
+
+$RandomSecret = [Convert]::ToBase64String((1..32 | ForEach-Object { [byte](Get-Random -Maximum 256) }))
+$RandomSecret
+
+Luego copia el resultado y pégalo en .env.local como NEXTAUTH_SECRET
+
+================================================================================
+OBTENER DATABASE_URL DE NEON
+================================================================================
+
+1. Ve a https://console.neon.tech
+2. Abre tu proyecto "elvis-barber-studio"
+3. Haz clic en "Connection Details"
+4. Copia la URL de conexión (empieza con postgresql://)
+5. Pégala en .env.local como DATABASE_URL
+
+La URL será similar a:
+
+postgresql://neondb_owner:xxxxx@ep-xxxxx.us-east-1.neon.tech/neondb
+
+================================================================================
+VERIFICAR CONFIGURACIÓN
+================================================================================
+
+Una vez configurado, en la terminal ejecuta:
+
+$env:DATABASE_URL = "postgresql://..."  # Pega tu URL aquí
+npx prisma db push
+
+Si todo está bien, verás:
+✓ Your database has been successfully pushed to your workspace
+
+================================================================================
+

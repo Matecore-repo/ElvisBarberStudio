@@ -1,0 +1,147 @@
+================================================================================
+                    CREDENCIALES DE NEON - CONFIGURADAS ✅
+================================================================================
+
+📊 ESTADO: Base de datos Neon conectada y funcional
+
+================================================================================
+🔑 CREDENCIALES DE BASE DE DATOS
+================================================================================
+
+Host: ep-morning-union-ac1lv6ou-pooler.sa-east-1.aws.neon.tech
+Database: neondb
+User: neondb_owner
+Password: npg_dHyw7UPZ2nCa
+
+Connection String:
+postgresql://neondb_owner:npg_dHyw7UPZ2nCa@ep-morning-union-ac1lv6ou-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require
+
+================================================================================
+👤 USUARIO DE PRUEBA PARA LOGIN
+================================================================================
+
+Email: iangel.oned@gmail.com
+Contraseña: Admin123!@#
+
+Para crear este usuario en la base de datos, ejecuta en PowerShell:
+
+$env:DATABASE_URL = "postgresql://neondb_owner:npg_dHyw7UPZ2nCa@ep-morning-union-ac1lv6ou-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require"
+
+npx prisma studio
+
+Luego en la UI visual:
+1. Haz clic en "User"
+2. Crea un nuevo registro con email y password hasheado
+
+================================================================================
+🔐 CONFIGURACIÓN NEXTAUTH
+================================================================================
+
+AUTH_SECRET: super-secret-key-for-next-auth-min-32-characters-long
+NEXTAUTH_URL: http://localhost:3000
+
+✅ Ambos configurados en .env.local
+
+================================================================================
+📧 SERVICIO DE EMAIL (RESEND)
+================================================================================
+
+API Key: re_bJ1NdsCY_Jh1pfn2JhAG6jMnqbwMzUPtF
+
+Resend está listo para enviar emails transaccionales.
+(Requiere implementar en las rutas de API si es necesario)
+
+================================================================================
+🌐 NEON API
+================================================================================
+
+API Key: napi_ru55vkm4q2fusbdjh79clvk9fnp1j0jvozyuag1mjk7k9my795emqhmul4369ho1
+Base URL: http://localhost:3000
+
+Para consultas directas a la API de Neon desde tu app.
+
+================================================================================
+📁 ARCHIVO .env.local
+================================================================================
+
+Guardado en: C:\Users\Matecore\Downloads\ElvisBarberStudio\.env.local
+
+Contenido:
+────────────────────────────────────────────────────────────
+# Neon Database
+DATABASE_URL=postgresql://neondb_owner:npg_dHyw7UPZ2nCa@ep-morning-union-ac1lv6ou-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require
+
+# Neon API
+NEON_API_KEY=napi_ru55vkm4q2fusbdjh79clvk9fnp1j0jvozyuag1mjk7k9my795emqhmul4369ho1
+NEON_AUTH_BASE_URL=http://localhost:3000
+
+# Resend Email Service
+RESEND_API_KEY=re_bJ1NdsCY_Jh1pfn2JhAG6jMnqbwMzUPtF
+
+# NextAuth
+AUTH_SECRET=super-secret-key-for-next-auth-min-32-characters-long
+NEXTAUTH_URL=http://localhost:3000
+
+# Test Credentials
+TEST_USER=iangel.oned@gmail.com
+TEST_PASSWORD=Admin123!@#
+────────────────────────────────────────────────────────────
+
+✅ Confirmado: Archivo .env.local creado correctamente
+
+================================================================================
+✅ ESTADO ACTUAL
+================================================================================
+
+✅ Base de datos Neon sincronizada
+✅ Variables de entorno configuradas
+✅ Prisma Client generado
+✅ Schema listo en PostgreSQL
+✅ NextAuth configurado
+✅ Resend API disponible
+
+================================================================================
+🚀 PRÓXIMOS PASOS
+================================================================================
+
+1. Iniciar servidor de desarrollo:
+   $ npm run dev
+
+2. Ir a http://localhost:3000/login
+
+3. Crear usuario en la base de datos (opción A):
+   - Usar Prisma Studio: npx prisma studio
+   - O crear manualmente en dashboard Neon
+
+4. Probar login con credenciales del usuario creado
+
+5. Acceder a /app para ver el dashboard
+
+================================================================================
+⚠️ IMPORTANTE PARA PRODUCCIÓN
+================================================================================
+
+Antes de deployar a producción:
+
+1. Cambiar AUTH_SECRET a un valor más aleatorio:
+   $RandomSecret = [Convert]::ToBase64String((1..32 | ForEach-Object { [byte](Get-Random -Maximum 256) }))
+   $RandomSecret
+
+2. Usar Vercel Environment Variables para producción (no .env.local)
+
+3. Habilitar SSL en la conexión Neon
+
+4. Implementar rate limiting en endpoints de login
+
+5. Configurar CORS si es necesario
+
+================================================================================
+📞 SOPORTE
+================================================================================
+
+Neon Console: https://console.neon.tech
+NextAuth Docs: https://next-auth.js.org
+Prisma Docs: https://www.prisma.io/docs
+
+================================================================================
+

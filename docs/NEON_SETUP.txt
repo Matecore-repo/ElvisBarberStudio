@@ -1,0 +1,120 @@
+================================================================================
+                    ELVIS BARBER STUDIO - NEON DATABASE SETUP
+================================================================================
+
+CLI INSTALADA: ✅ Neon v2.19.0
+
+================================================================================
+PASO 1: Autenticación en Neon
+================================================================================
+
+1. Ve a: https://console.neon.tech
+2. Crea una cuenta o inicia sesión
+3. En la terminal, ejecuta:
+
+   $ neon auth
+
+   Esto abrirá el navegador para autenticarte. Completa el flujo de login.
+
+================================================================================
+PASO 2: Crear Proyecto y Base de Datos
+================================================================================
+
+Una vez autenticado, puedes crear un proyecto:
+
+   $ neon projects create --name elvis-barber-studio
+
+Luego crear una rama (branch):
+
+   $ neon branches create --project-id <project-id> --name main
+
+================================================================================
+PASO 3: Obtener String de Conexión
+================================================================================
+
+Para obtener tu string de conexión (DATABASE_URL):
+
+   $ neon connection-string --project-id <project-id>
+
+Copia este valor y agrégalo a tu archivo .env.local
+
+================================================================================
+CREDENCIALES DE EJEMPLO
+================================================================================
+
+Cuando crees tu base de datos en Neon, recibirás:
+
+Database: neondb
+User: neondb_owner
+Password: [generada automáticamente por Neon]
+
+IMPORTANTE: Neon genera la contraseña automáticamente. No necesitas crear una.
+
+Tu string de conexión será similar a:
+
+  postgresql://neondb_owner:<password>@ep-<hash>.us-east-1.neon.tech/neondb
+
+================================================================================
+PASO 4: Configurar Variables de Entorno
+================================================================================
+
+En C:\Users\Matecore\Downloads\ElvisBarberStudio\.env.local agrega:
+
+DATABASE_URL=postgresql://neondb_owner:<password>@ep-<hash>.us-east-1.neon.tech/neondb
+
+NEXTAUTH_SECRET=[genera uno con: openssl rand -base64 32]
+NEXTAUTH_URL=http://localhost:3000
+
+================================================================================
+PASO 5: Aplicar Migrations
+================================================================================
+
+Una vez configurado, ejecuta:
+
+   $ npx prisma migrate dev --name init
+
+Esto creará las tablas automáticamente basado en tu schema.prisma
+
+================================================================================
+COMANDOS ÚTILES
+================================================================================
+
+Ver todos los proyectos:
+   $ neon projects list
+
+Ver ramas de un proyecto:
+   $ neon branches list --project-id <project-id>
+
+Conectarse directamente a la base de datos:
+   $ neon connection-string --project-id <project-id> | psql
+
+================================================================================
+DASHBOARD NEON
+================================================================================
+
+Una vez creado tu proyecto, accede a:
+https://console.neon.tech/app/projects
+
+Aquí puedes:
+- Ver tu base de datos
+- Crear branching para desarrollo
+- Monitorear uso
+- Configurar backups
+
+================================================================================
+NOTAS IMPORTANTES
+================================================================================
+
+✅ Neon es GRATUITO para proyectos pequeños (hasta cierto límite)
+✅ Incluye backups automáticos
+✅ PostgreSQL 100% compatible
+✅ Excelente para desarrollo y producción
+✅ No necesitas instalar PostgreSQL local
+
+⚠️ SEGURIDAD: 
+   - Nunca commits tu .env.local a Git
+   - Usa .env.local solo para desarrollo local
+   - En producción, usa variables de entorno del servidor
+
+================================================================================
+
