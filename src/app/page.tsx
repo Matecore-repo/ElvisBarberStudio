@@ -8,7 +8,7 @@ export default function Home() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
-            <span className="text-xl sm:text-2xl font-bold tracking-tight">ELVIS<span className="text-accent">.</span></span>
+            <span className="text-xs sm:text-sm font-bold tracking-[0.15em] uppercase whitespace-nowrap">ELVIS BARBER STUDIO<span className="text-accent">.</span></span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-xs sm:text-sm font-medium tracking-wide uppercase">
