@@ -2,48 +2,9 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
 
-export async function GET(
-  request: NextRequest,
-  props: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await auth()
-    if (!session) {
-      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
-    }
-
-    const { id } = await props.params
-
-    const barber = await prisma.barber.findUnique({
-      where: { id: parseInt(id) },
-      include: {
-        appointments: {
-          orderBy: { createdAt: "desc" },
-          take: 10,
-        },
-      },
-    })
-
-    if (!barber) {
-      return NextResponse.json(
-        { error: "Peluquero no encontrado" },
-        { status: 404 }
-      )
-    }
-
-    return NextResponse.json(barber)
-  } catch (error) {
-    console.error("Error fetching barber:", error)
-    return NextResponse.json(
-      { error: "Error al obtener peluquero" },
-      { status: 500 }
-    )
-  }
-}
-
 export async function PUT(
   request: NextRequest,
-  props: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth()
@@ -51,18 +12,17 @@ export async function PUT(
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
-    const { id } = await props.params
+    const { id } = await params
     const data = await request.json()
-    const { name, email, phone, specialization, active } = data
+    const { active, commissionType, commissionValue, name } = data
 
     const barber = await prisma.barber.update({
-      where: { id: parseInt(id) },
+      where: { id },
       data: {
-        ...(name && { name }),
-        ...(email && { email }),
-        ...(phone !== undefined && { phone }),
-        ...(specialization && { specialization }),
-        ...(active !== undefined && { active }),
+        active: active !== undefined ? active : undefined,
+        name: name !== undefined ? name : undefined,
+        commissionType: commissionType !== undefined ? commissionType : undefined,
+        commissionValue: commissionValue !== undefined ? commissionValue : undefined,
       },
     })
 
@@ -78,7 +38,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  props: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth()
@@ -86,13 +46,13 @@ export async function DELETE(
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
-    const { id } = await props.params
+    const { id } = await params
 
     await prisma.barber.delete({
-      where: { id: parseInt(id) },
+      where: { id },
     })
 
-    return NextResponse.json({ message: "Peluquero eliminado" })
+    return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Error deleting barber:", error)
     return NextResponse.json(

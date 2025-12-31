@@ -15,7 +15,7 @@ export async function GET(
     const { id } = await props.params
 
     const appointment = await prisma.appointment.findUnique({
-      where: { id: parseInt(id) },
+      where: { id },
       include: {
         client: true,
         barber: true,
@@ -54,9 +54,9 @@ export async function PUT(
     const { date, time, service, status } = data
 
     const appointment = await prisma.appointment.update({
-      where: { id: parseInt(id) },
+      where: { id },
       data: {
-        ...(date && { date: new Date(date) }),
+        ...(date && { scheduledStart: new Date(date) }),
         ...(time && { time }),
         ...(service && { service }),
         ...(status && { status }),
@@ -90,7 +90,7 @@ export async function DELETE(
     const { id } = await props.params
 
     await prisma.appointment.delete({
-      where: { id: parseInt(id) },
+      where: { id },
     })
 
     return NextResponse.json({ message: "Turno eliminado" })

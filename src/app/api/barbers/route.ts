@@ -1,11 +1,12 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
+import { Prisma } from "@prisma/client"
 
 export async function GET(request: NextRequest) {
   try {
     const session = await auth()
-    if (!session) {
+    if (!session?.user?.salonId) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
@@ -16,7 +17,9 @@ export async function GET(request: NextRequest) {
     const active = searchParams.get("active")
 
     const skip = (page - 1) * limit
-    const where: any = {}
+    const where: Prisma.BarberWhereInput = {
+      salonId: session.user.salonId
+    }
 
     if (search) {
       where.name = { contains: search, mode: "insensitive" }
@@ -61,21 +64,21 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await request.json()
-    const { name, email, phone, specialization, active } = data
+    const { name, commissionType, commissionValue, active } = data
 
-    if (!name || !email) {
+    if (!name) {
       return NextResponse.json(
-        { error: "Nombre y email son requeridos" },
+        { error: "El nombre es requerido" },
         { status: 400 }
       )
     }
 
     const barber = await prisma.barber.create({
       data: {
+        salonId: session.user.salonId as string,
         name,
-        email,
-        phone: phone || null,
-        specialization: specialization || "Barbería General",
+        commissionType: commissionType || "PERCENT",
+        commissionValue: commissionValue || 0,
         active: active !== false,
       },
     })

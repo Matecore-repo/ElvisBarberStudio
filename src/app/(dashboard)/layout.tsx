@@ -1,6 +1,7 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { DashboardShell } from "@/components/dashboard/DashboardShell"
+import { DataProvider } from "@/contexts/DataContext"
 
 export default async function DashboardLayout({
     children,
@@ -14,6 +15,8 @@ export default async function DashboardLayout({
     }
 
     return (
-        <DashboardShell user={session.user}>{children}</DashboardShell>
+        <DataProvider>
+            <DashboardShell user={session.user}>{children}</DashboardShell>
+        </DataProvider>
     )
 }

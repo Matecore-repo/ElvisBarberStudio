@@ -1,11 +1,12 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
+import { Prisma, CommissionStatus } from "@prisma/client"
 
 export async function GET(request: NextRequest) {
   try {
     const session = await auth()
-    if (!session) {
+    if (!session?.user?.salonId) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
@@ -16,13 +17,15 @@ export async function GET(request: NextRequest) {
     const barberId = searchParams.get("barberId")
 
     const skip = (page - 1) * limit
-    const where: any = {}
+    const where: Prisma.CommissionWhereInput = {
+      salonId: session.user.salonId
+    }
 
     if (status && status !== "all") {
-      where.status = status
+      where.status = status as CommissionStatus
     }
     if (barberId) {
-      where.barberId = parseInt(barberId)
+      where.barberId = barberId
     }
 
     const [commissions, total] = await Promise.all([
@@ -67,17 +70,18 @@ export async function POST(request: NextRequest) {
     const data = await request.json()
     const { barberId, appointmentId, amount, status } = data
 
-    if (!barberId || !amount) {
+    if (!barberId || !appointmentId || !amount) {
       return NextResponse.json(
-        { error: "Peluquero y monto son requeridos" },
+        { error: "Peluquero, turno y monto son requeridos" },
         { status: 400 }
       )
     }
 
     const commission = await prisma.commission.create({
       data: {
+        salonId: session.user.salonId as string,
         barberId,
-        appointmentId: appointmentId || null,
+        appointmentId,
         amount: parseFloat(amount),
         status: status || "PENDING",
       },

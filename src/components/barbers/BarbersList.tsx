@@ -2,13 +2,19 @@
 
 import { useState } from "react"
 import { Barber } from "@prisma/client"
+import { Plus } from "lucide-react"
+import { DataTable } from "@/components/dashboard/DataTable"
+
+interface BarberSerialized extends Omit<Barber, 'commissionValue'> {
+  commissionValue: number
+}
 
 interface BarbersListProps {
-  initialBarbers: Barber[]
+  initialBarbers: BarberSerialized[]
 }
 
 export function BarbersList({ initialBarbers }: BarbersListProps) {
-  const [barbers, setBarbers] = useState(initialBarbers)
+  const [barbers, setBarbers] = useState<BarberSerialized[]>(initialBarbers)
   const [showForm, setShowForm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [formError, setFormError] = useState("")
@@ -66,14 +72,39 @@ export function BarbersList({ initialBarbers }: BarbersListProps) {
     }
   }
 
+  const filters = [
+    {
+      key: "active",
+      label: "Estado",
+      options: [
+        { value: "true", label: "Activo" },
+        { value: "false", label: "Inactivo" },
+      ],
+    },
+  ]
+
   return (
     <div className="space-y-8">
-      <div className="flex justify-end">
-        <button onClick={() => setShowForm(!showForm)} className={showForm ? "btn-secondary" : "btn-primary"}>
-          {showForm ? "Cancelar" : "Nuevo peluquero"}
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold">Peluqueros</h1>
+          <p className="text-foreground-muted mt-1">Gestiona tu equipo de peluqueros</p>
+        </div>
+        <button
+          onClick={() => {
+            setFormError("")
+            setFormData({ name: "", commissionType: "PERCENT", commissionValue: "" })
+            setShowForm(!showForm)
+          }}
+          className="btn-primary flex items-center gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Nuevo peluquero
         </button>
       </div>
 
+      {/* Form */}
       {showForm && (
         <div className="card">
           <div className="flex items-start justify-between gap-4">
@@ -152,52 +183,61 @@ export function BarbersList({ initialBarbers }: BarbersListProps) {
         </div>
       )}
 
-      {barbers.length === 0 ? (
-        <div className="card">
-          <p className="text-foreground-muted text-center py-10">No hay peluqueros registrados aún.</p>
-        </div>
-      ) : (
-        <div className="grid gap-4">
-          {barbers.map((barber) => (
-            <div key={barber.id} className="card">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="flex items-center gap-4 min-w-0">
-                  <div className="w-12 h-12 rounded-xl bg-accent/15 flex items-center justify-center shrink-0">
-                    <span className="text-xl" aria-hidden="true">
-                      🧔
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="font-bold truncate">{barber.name}</h3>
-                    <p className="text-foreground-muted text-sm">
-                      Comisión:{" "}
-                      {barber.commissionType === "PERCENT" ? `${barber.commissionValue}%` : `$${barber.commissionValue}`}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-                  <span
-                    className={[
-                      "badge w-fit",
-                      barber.active ? "bg-success/15 text-success" : "bg-error/15 text-error",
-                    ].join(" ")}
-                  >
-                    {barber.active ? "Activo" : "Inactivo"}
-                  </span>
-                  <button
-                    onClick={() => toggleActive(barber.id, barber.active)}
-                    className="btn-secondary w-full sm:w-auto"
-                  >
-                    {barber.active ? "Desactivar" : "Activar"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Table */}
+      <DataTable
+        columns={[
+          {
+            key: "name" as any,
+            label: "Nombre",
+            searchable: true,
+            sortable: true,
+          },
+          {
+            key: "commissionType" as any,
+            label: "Tipo de Comisión",
+            align: "center",
+            render: (value) => (value === "PERCENT" ? "Porcentaje %" : "Monto fijo $"),
+          },
+          {
+            key: "commissionValue" as any,
+            label: "Comisión",
+            align: "center",
+            render: (value, barber: BarberSerialized) =>
+              barber.commissionType === "PERCENT" ? `${value}%` : `$${parseFloat(String(value)).toFixed(2)}`,
+          },
+          {
+            key: "active" as any,
+            label: "Estado",
+            align: "center",
+            render: (value) => (
+              <span className={`badge ${value ? "bg-success/15 text-success" : "bg-error/15 text-error"}`}>
+                {value ? "Activo" : "Inactivo"}
+              </span>
+            ),
+          },
+          {
+            key: "id" as any,
+            label: "Acciones",
+            align: "center",
+            render: (_, barber: BarberSerialized) => (
+              <button
+                onClick={() => toggleActive(barber.id, barber.active)}
+                className="btn-secondary text-xs py-1 px-3"
+              >
+                {barber.active ? "Desactivar" : "Activar"}
+              </button>
+            ),
+          },
+        ]}
+        data={barbers}
+        filters={filters}
+        searchPlaceholder="Buscar peluquero..."
+        emptyState={{
+          icon: "💇",
+          title: "Sin peluqueros",
+          description: "No hay peluqueros registrados aún.",
+        }}
+      />
     </div>
   )
 }
-

@@ -15,7 +15,7 @@ export async function GET(
     const { id } = await props.params
 
     const commission = await prisma.commission.findUnique({
-      where: { id: parseInt(id) },
+      where: { id },
       include: {
         barber: true,
         appointment: true,
@@ -54,9 +54,9 @@ export async function PUT(
     const { amount, status } = data
 
     const commission = await prisma.commission.update({
-      where: { id: parseInt(id) },
+      where: { id },
       data: {
-        ...(amount && { amount: parseFloat(amount) }),
+        ...(amount && { amount }),
         ...(status && { status }),
       },
       include: {
@@ -87,7 +87,7 @@ export async function DELETE(
     const { id } = await props.params
 
     await prisma.commission.delete({
-      where: { id: parseInt(id) },
+      where: { id },
     })
 
     return NextResponse.json({ message: "Comisión eliminada" })

@@ -1,9 +1,13 @@
 import Link from "next/link"
 import Image from "next/image"
+import { DataProvider } from "@/contexts/DataContext"
+import { ServicesSection } from "@/components/landing/ServicesSection"
+import { SalonsSection } from "@/components/landing/SalonsSection"
 
 export default function Home() {
   return (
-    <div className="w-full min-h-screen flex flex-col" suppressHydrationWarning>
+    <DataProvider>
+      <div className="w-full min-h-screen flex flex-col" suppressHydrationWarning>
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
@@ -71,90 +75,7 @@ export default function Home() {
       </section>
 
       {/* Servicios Menu Section */}
-      <section id="servicios" className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 bg-background relative z-10">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12 sm:mb-16 md:mb-24">
-            <span className="text-accent text-xs font-bold tracking-[0.2em] uppercase">Nuestro Menú</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif mt-4 sm:mt-6 mb-6 sm:mb-8 text-white">
-              Servicios <span className="text-accent italic">&</span> Precios
-            </h2>
-            <div className="w-16 sm:w-24 h-[1px] bg-gradient-to-r from-transparent via-accent/50 to-transparent mx-auto" />
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 sm:gap-12 md:gap-16 lg:gap-24">
-            {/* Column 1 */}
-            <div className="space-y-6 sm:space-y-8">
-              <h3 className="text-xl sm:text-2xl font-serif border-b border-white/10 pb-3 sm:pb-4 mb-4 sm:mb-6">Cortes</h3>
-
-              <div className="group flex justify-between items-baseline w-full gap-3">
-                <div className="relative z-10 bg-background pr-2">
-                  <h4 className="font-bold text-base sm:text-lg group-hover:text-accent transition-colors">Corte Clásico</h4>
-                  <p className="text-xs sm:text-sm text-foreground-muted">Tijera o máquina, lavado incluido</p>
-                </div>
-                <div className="flex-grow border-b border-dotted border-white/20 relative -top-1 mx-1"></div>
-                <div className="relative z-10 bg-background pl-2 font-bold text-accent text-sm sm:text-base">$2,500</div>
-              </div>
-
-              <div className="group flex justify-between items-baseline w-full gap-3">
-                <div className="relative z-10 bg-background pr-2">
-                  <h4 className="font-bold text-base sm:text-lg group-hover:text-accent transition-colors">Skin Fade</h4>
-                  <p className="text-xs sm:text-sm text-foreground-muted">Degradado perfecto a navaja</p>
-                </div>
-                <div className="flex-grow border-b border-dotted border-white/20 relative -top-1 mx-1"></div>
-                <div className="relative z-10 bg-background pl-2 font-bold text-accent text-sm sm:text-base">$3,000</div>
-              </div>
-
-              <div className="group flex justify-between items-baseline w-full gap-3">
-                <div className="relative z-10 bg-background pr-2">
-                  <h4 className="font-bold text-base sm:text-lg group-hover:text-accent transition-colors">Corte Infantil</h4>
-                  <p className="text-xs sm:text-sm text-foreground-muted">Menores de 12 años</p>
-                </div>
-                <div className="flex-grow border-b border-dotted border-white/20 relative -top-1 mx-1"></div>
-                <div className="relative z-10 bg-background pl-2 font-bold text-accent text-sm sm:text-base">$2,000</div>
-              </div>
-            </div>
-
-            {/* Column 2 */}
-            <div className="space-y-6 sm:space-y-8">
-              <h3 className="text-xl sm:text-2xl font-serif border-b border-white/10 pb-3 sm:pb-4 mb-4 sm:mb-6">Barba & Afeitado</h3>
-
-              <div className="group flex justify-between items-baseline w-full gap-3">
-                <div className="relative z-10 bg-background pr-2">
-                  <h4 className="font-bold text-base sm:text-lg group-hover:text-accent transition-colors">Perfilado Express</h4>
-                  <p className="text-xs sm:text-sm text-foreground-muted">Solo máquina, sin toalla</p>
-                </div>
-                <div className="flex-grow border-b border-dotted border-white/20 relative -top-1 mx-1"></div>
-                <div className="relative z-10 bg-background pl-2 font-bold text-accent text-sm sm:text-base">$1,500</div>
-              </div>
-
-              <div className="group flex justify-between items-baseline w-full gap-3">
-                <div className="relative z-10 bg-background pr-2">
-                  <h4 className="font-bold text-base sm:text-lg group-hover:text-accent transition-colors">Ritual de Barba</h4>
-                  <p className="text-xs sm:text-sm text-foreground-muted">Toalla caliente, aceites, navaja</p>
-                </div>
-                <div className="flex-grow border-b border-dotted border-white/20 relative -top-1 mx-1"></div>
-                <div className="relative z-10 bg-background pl-2 font-bold text-accent text-sm sm:text-base">$2,200</div>
-              </div>
-
-              <div className="group flex justify-between items-baseline w-full gap-3">
-                <div className="relative z-10 bg-background pr-2">
-                  <h4 className="font-bold text-base sm:text-lg group-hover:text-accent transition-colors">Afeitado Tradicional</h4>
-                  <p className="text-xs sm:text-sm text-foreground-muted">Navaja completa, masaje facial</p>
-                </div>
-                <div className="flex-grow border-b border-dotted border-white/20 relative -top-1 mx-1"></div>
-                <div className="relative z-10 bg-background pl-2 font-bold text-accent text-sm sm:text-base">$2,500</div>
-              </div>
-            </div>
-          </div>
-
-          {/* CTA Button */}
-          <div className="mt-12 sm:mt-16 text-center">
-            <a href="#contacto" className="inline-block border border-white/20 px-8 sm:px-10 py-2.5 sm:py-3 text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all duration-300">
-              Ver Menú Completo
-            </a>
-          </div>
-        </div>
-      </section>
+      <ServicesSection />
 
       {/* Experience Section - Split Screen */}
       <section id="experiencia" className="relative min-h-screen grid md:grid-cols-2 bg-[#050505]">
@@ -241,114 +162,7 @@ export default function Home() {
       </section>
 
       {/* Contacto Section */}
-      <section id="contacto" className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 bg-background-alt">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12 sm:mb-16 md:mb-20">
-            <span className="text-accent text-xs sm:text-sm font-medium uppercase tracking-wider">Sucursales</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium mt-3 sm:mt-4 mb-4 sm:mb-6 text-white">
-              ¿Listo para tu{" "}
-              <span className="text-gold-gradient">Transformación</span>?
-            </h2>
-            <p className="text-foreground-muted text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
-              Visita cualquiera de nuestras sucursales en Buenos Aires. Estamos listos para darte el mejor servicio de barbería.
-            </p>
-          </div>
-
-          {/* Branches Grid - Mobile First Responsive */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
-            {/* Branch 1 */}
-            <div className="group flex flex-col h-full p-5 sm:p-6 border border-border rounded-xl bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/60">
-              <div className="flex-1 flex flex-col justify-between">
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
-                    <span className="text-accent font-bold text-sm">01</span>
-                  </div>
-                  <div>
-                    <p className="text-foreground-muted text-xs uppercase tracking-widest font-medium mb-2">Sucursal Centro</p>
-                    <p className="text-white font-semibold text-sm sm:text-base leading-relaxed">Av. Rivadavia 2222</p>
-                  </div>
-                </div>
-                <a href="tel:+541132975792" className="mt-4 inline-flex items-center text-accent hover:text-accent/80 transition-colors text-xs sm:text-sm font-medium">
-                  <span>11 3297-5792</span>
-                  <svg className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            {/* Branch 2 */}
-            <div className="group flex flex-col h-full p-5 sm:p-6 border border-border rounded-xl bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/60">
-              <div className="flex-1 flex flex-col justify-between">
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
-                    <span className="text-accent font-bold text-sm">02</span>
-                  </div>
-                  <div>
-                    <p className="text-foreground-muted text-xs uppercase tracking-widest font-medium mb-2">Sucursal Recoleta</p>
-                    <p className="text-white font-semibold text-sm sm:text-base leading-relaxed">Viamonte 2600</p>
-                  </div>
-                </div>
-                <a href="tel:+541138326831" className="mt-4 inline-flex items-center text-accent hover:text-accent/80 transition-colors text-xs sm:text-sm font-medium">
-                  <span>11 3832-6831</span>
-                  <svg className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            {/* Branch 3 */}
-            <div className="group flex flex-col h-full p-5 sm:p-6 border border-border rounded-xl bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/60">
-              <div className="flex-1 flex flex-col justify-between">
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
-                    <span className="text-accent font-bold text-sm">03</span>
-                  </div>
-                  <div>
-                    <p className="text-foreground-muted text-xs uppercase tracking-widest font-medium mb-2">Sucursal Caballito</p>
-                    <p className="text-white font-semibold text-sm sm:text-base leading-relaxed">Av. Iriarte 2847</p>
-                  </div>
-                </div>
-                <a href="tel:+541169714636" className="mt-4 inline-flex items-center text-accent hover:text-accent/80 transition-colors text-xs sm:text-sm font-medium">
-                  <span>11 6971-4636</span>
-                  <svg className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            {/* Branch 4 */}
-            <div className="group flex flex-col h-full p-5 sm:p-6 border border-border rounded-xl bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/60">
-              <div className="flex-1 flex flex-col justify-between">
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
-                    <span className="text-accent font-bold text-sm">04</span>
-                  </div>
-                  <div>
-                    <p className="text-foreground-muted text-xs uppercase tracking-widest font-medium mb-2">Sucursal Flores</p>
-                    <p className="text-white font-semibold text-sm sm:text-base leading-relaxed">Av. Iriarte 1673</p>
-                  </div>
-                </div>
-                <div className="mt-4 inline-flex items-center text-foreground-muted/60 text-xs sm:text-sm font-medium">
-                  <span>Sin línea disponible</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* CTA Section */}
-          <div className="mt-12 sm:mt-16 md:mt-20 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-            <a href="#" className="btn-primary min-h-11 sm:min-h-12 px-6 sm:px-8 text-xs sm:text-sm w-full sm:w-auto text-center">
-              Reservar Turno
-            </a>
-            <a href="#" className="inline-flex items-center justify-center min-h-11 sm:min-h-12 px-6 sm:px-8 border border-border rounded-lg hover:border-accent/50 hover:bg-card/40 transition-all text-xs sm:text-sm font-medium w-full sm:w-auto">
-              Ver Ubicaciones en Mapa
-            </a>
-          </div>
-        </div>
-      </section>
+      <SalonsSection />
 
       {/* Footer */}
       <footer className="py-6 sm:py-8 px-4 sm:px-6 border-t border-border">
@@ -369,6 +183,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </DataProvider>
   )
 }

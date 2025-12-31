@@ -1,17 +1,11 @@
 "use client"
 
-import { useState, use } from "react"
+import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 
-export default function LoginPage(props: {
-  params: Promise<any>
-  searchParams: Promise<any>
-}) {
-  const params = use(props.params)
-  const searchParams = use(props.searchParams)
-  
+export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")

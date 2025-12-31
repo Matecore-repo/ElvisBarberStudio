@@ -35,7 +35,10 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
   }, [sidebarOpen])
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-black">
+      {/* Degradado atmosférico: gris muy oscuro a negro sin azules */}
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(30,_30,_30,_0.15)_0%,_rgba(0,_0,_0,_0)_70%)] pointer-events-none" />
+      
       <Sidebar user={user} className="hidden md:flex" />
 
       {sidebarOpen && (
@@ -56,7 +59,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
         </div>
       )}
 
-      <div className="md:pl-64">
+      <div className="md:pl-64 relative z-10">
         <TopNav user={user} onOpenMenu={() => setSidebarOpen(true)} />
         <main className="container-app pt-20 pb-10">{children}</main>
       </div>

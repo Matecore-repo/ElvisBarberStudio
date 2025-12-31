@@ -2,13 +2,30 @@
 
 import { useMemo, useState } from "react"
 import { Commission, Barber, Appointment, Client, Service } from "@prisma/client"
+import { DataTable } from "@/components/dashboard/DataTable"
 
-type CommissionWithRelations = Commission & {
-  barber: Barber
-  appointment: Appointment & {
+interface ServiceSerialized extends Omit<Service, 'price'> {
+  price: number
+}
+
+interface AppointmentSerialized extends Omit<Appointment, 'totalAmount'> {
+  totalAmount: number | null
+}
+
+interface CommissionSerialized extends Omit<Commission, 'amount'> {
+  amount: number
+}
+
+interface BarberSerialized extends Omit<Barber, 'commissionValue'> {
+  commissionValue: number
+}
+
+type CommissionWithRelations = CommissionSerialized & {
+  barber: BarberSerialized
+  appointment: (AppointmentSerialized & {
     client: Client | null
-    service: Service | null
-  }
+    service: ServiceSerialized | null
+  }) | null
 }
 
 interface CommissionsListProps {
@@ -16,18 +33,13 @@ interface CommissionsListProps {
 }
 
 export function CommissionsList({ initialCommissions }: CommissionsListProps) {
-  const [commissions, setCommissions] = useState(initialCommissions)
-  const [filter, setFilter] = useState<"ALL" | "PENDING" | "PAID">("PENDING")
+  const [commissions, setCommissions] = useState<CommissionWithRelations[]>(initialCommissions)
   const [loading, setLoading] = useState<string | null>(null)
-
-  const filteredCommissions = useMemo(() => {
-    return commissions.filter((c) => (filter === "ALL" ? true : c.status === filter))
-  }, [commissions, filter])
 
   const totalPending = useMemo(() => {
     return commissions
       .filter((c) => c.status === "PENDING")
-      .reduce((sum, c) => sum + parseFloat(c.amount.toString()), 0)
+      .reduce((sum, c) => sum + c.amount, 0)
   }, [commissions])
 
   const handlePay = async (id: string) => {
@@ -44,15 +56,27 @@ export function CommissionsList({ initialCommissions }: CommissionsListProps) {
     }
   }
 
+  const filters = [
+    {
+      key: "status",
+      label: "Estado",
+      options: [
+        { value: "PENDING", label: "Pendiente" },
+        { value: "PAID", label: "Pagada" },
+      ],
+    },
+  ]
+
   return (
     <div className="space-y-8">
+      {/* Summary Card */}
       <div className="card bg-accent/10 border-accent/20">
         <div className="flex items-center justify-between gap-6">
           <div>
             <p className="text-foreground-muted text-sm">Total pendiente de pago</p>
             <p className="text-4xl font-bold text-accent">${totalPending.toFixed(2)}</p>
           </div>
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-accent/15 flex items-center justify-center">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-accent/15 flex items-center justify-center shrink-0">
             <span className="text-3xl" aria-hidden="true">
               💸
             </span>
@@ -60,80 +84,87 @@ export function CommissionsList({ initialCommissions }: CommissionsListProps) {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-2">
-        {(["PENDING", "PAID", "ALL"] as const).map((status) => {
-          const active = filter === status
-          return (
-            <button
-              key={status}
-              onClick={() => setFilter(status)}
-              className={active ? "btn-primary w-full sm:w-auto" : "btn-secondary w-full sm:w-auto"}
-            >
-              {status === "PENDING" ? "Pendientes" : status === "PAID" ? "Pagadas" : "Todas"}
-            </button>
-          )
-        })}
-      </div>
-
-      {filteredCommissions.length === 0 ? (
-        <div className="card">
-          <p className="text-foreground-muted text-center py-10">
-            No hay comisiones{" "}
-            {filter === "PENDING" ? "pendientes" : filter === "PAID" ? "pagadas" : "registradas"}.
-          </p>
-        </div>
-      ) : (
-        <div className="grid gap-4">
-          {filteredCommissions.map((commission) => (
-            <div key={commission.id} className="card">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="flex items-start gap-4 min-w-0">
-                  <div className="w-12 h-12 rounded-xl bg-accent/15 flex items-center justify-center shrink-0">
-                    <span className="text-xl" aria-hidden="true">
-                      🧾
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="font-bold truncate">{commission.barber.name}</h3>
-                    <p className="text-foreground-muted text-sm">
-                      {commission.appointment.service?.name || "Servicio"} <span aria-hidden="true">•</span>{" "}
-                      {commission.appointment.client?.name || "Cliente"}
-                    </p>
-                    <p className="text-foreground-muted text-xs">
-                      {new Date(commission.createdAt).toLocaleDateString("es-AR")}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-                  <div className="sm:text-right">
-                    <p className="text-2xl font-bold text-accent">${commission.amount.toString()}</p>
-                    <span
-                      className={[
-                        "badge w-fit",
-                        commission.status === "PENDING" ? "bg-warning/15 text-warning" : "bg-success/15 text-success",
-                      ].join(" ")}
-                    >
-                      {commission.status === "PENDING" ? "Pendiente" : "Pagada"}
-                    </span>
-                  </div>
-
-                  {commission.status === "PENDING" && (
-                    <button
-                      onClick={() => handlePay(commission.id)}
-                      disabled={loading === commission.id}
-                      className="btn-primary w-full sm:w-auto"
-                    >
-                      {loading === commission.id ? "Procesando..." : "Pagar"}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Table */}
+      <DataTable
+        columns={[
+          {
+            key: "barber" as any,
+            label: "Peluquero",
+            searchable: true,
+            sortable: true,
+            render: (_, commission: CommissionWithRelations) => commission.barber.name,
+          },
+          {
+            key: "appointment" as any,
+            label: "Cliente",
+            searchable: true,
+            sortable: true,
+            render: (_, commission: CommissionWithRelations) => commission.appointment?.client?.name || "Sin cliente",
+          },
+          {
+            key: "appointment" as any,
+            label: "Servicio",
+            searchable: true,
+            sortable: true,
+            render: (_, commission: CommissionWithRelations) => commission.appointment?.service?.name || "Sin servicio",
+          },
+          {
+            key: "amount" as any,
+            label: "Monto",
+            align: "right",
+            sortable: true,
+            render: (value) => `$${parseFloat(String(value)).toFixed(2)}`,
+          },
+          {
+            key: "createdAt" as any,
+            label: "Fecha",
+            sortable: true,
+            render: (value) =>
+              new Date(value).toLocaleDateString("es-AR", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              }),
+          },
+          {
+            key: "status" as any,
+            label: "Estado",
+            align: "center",
+            render: (value) => (
+              <span
+                className={`badge ${
+                  value === "PENDING" ? "bg-warning/15 text-warning" : "bg-success/15 text-success"
+                }`}
+              >
+                {value === "PENDING" ? "Pendiente" : "Pagada"}
+              </span>
+            ),
+          },
+          {
+            key: "id" as any,
+            label: "Acción",
+            align: "center",
+            render: (_, commission: CommissionWithRelations) =>
+              commission.status === "PENDING" && (
+                <button
+                  onClick={() => handlePay(commission.id)}
+                  disabled={loading === commission.id}
+                  className="btn-primary text-xs py-1 px-3"
+                >
+                  {loading === commission.id ? "..." : "Pagar"}
+                </button>
+              ),
+          },
+        ]}
+        data={commissions}
+        filters={filters}
+        searchPlaceholder="Buscar peluquero, cliente o servicio..."
+        emptyState={{
+          icon: "🧾",
+          title: "Sin comisiones",
+          description: "No hay comisiones registradas aún.",
+        }}
+      />
     </div>
   )
 }
-

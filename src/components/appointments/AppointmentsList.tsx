@@ -2,18 +2,33 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { Appointment, Client, Service, Barber } from "@prisma/client"
-import { User, CheckCircle, X } from "lucide-react"
+import { X } from "lucide-react"
+import { DataTable } from "@/components/dashboard/DataTable"
 
-type AppointmentWithRelations = Appointment & {
+interface ServiceSerialized extends Omit<Service, 'price'> {
+  price: number
+}
+
+interface AppointmentSerialized extends Omit<Appointment, 'totalAmount'> {
+  totalAmount: number | null
+}
+
+type AppointmentWithRelations = AppointmentSerialized & {
   client: Client | null
-  service: Service | null
+  service: ServiceSerialized | null
   barber: Barber | null
+}
+
+interface BarberSerialized extends Omit<Barber, 'commissionValue'> {
+  commissionValue: number
 }
 
 interface AppointmentsListProps {
   initialAppointments: AppointmentWithRelations[]
-  barbers: Barber[]
+  barbers: BarberSerialized[]
 }
+
+type AppointmentStatus = "SCHEDULED" | "COMPLETED" | "CANCELED"
 
 export function AppointmentsList({ initialAppointments, barbers }: AppointmentsListProps) {
   const [appointments, setAppointments] = useState(initialAppointments)
@@ -24,11 +39,8 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
-  const selectedServiceName = selectedAppointment?.service?.name || "Servicio"
-  const selectedClientName = selectedAppointment?.client?.name || "Cliente"
-
   const barberOptions = useMemo(() => {
-    return [{ id: "", name: "Seleccionar peluquero" }, ...barbers.map((b) => ({ id: b.id, name: b.name }))]
+    return barbers.map((b) => ({ value: b.id, label: b.name }))
   }, [barbers])
 
   const closeModal = () => {
@@ -46,7 +58,6 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
     }
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCompleteModal])
 
   useEffect(() => {
@@ -97,19 +108,6 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
     }
   }
 
-  const getStatusClasses = (status: string) => {
-    switch (status) {
-      case "SCHEDULED":
-        return "bg-info/15 text-info"
-      case "COMPLETED":
-        return "bg-success/15 text-success"
-      case "CANCELED":
-        return "bg-error/15 text-error"
-      default:
-        return "bg-foreground-muted/15 text-foreground-muted"
-    }
-  }
-
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "SCHEDULED":
@@ -123,58 +121,117 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
     }
   }
 
+  const formatDate = (date: Date | string) => {
+    return new Date(date).toLocaleDateString("es-AR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+  }
+
+  const formatTime = (date: Date | string) => {
+    return new Date(date).toLocaleTimeString("es-AR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  }
+
+  const filters = [
+    {
+      key: "status",
+      label: "Estado",
+      options: [
+        { value: "SCHEDULED", label: "Programado" },
+        { value: "COMPLETED", label: "Completado" },
+        { value: "CANCELED", label: "Cancelado" },
+      ],
+    },
+    {
+      key: "barberId",
+      label: "Peluquero",
+      options: barberOptions,
+    },
+  ]
+
   return (
-    <div className="space-y-4">
-      {appointments.length === 0 ? (
-        <div className="card">
-          <p className="text-foreground-muted text-center py-10">No hay turnos registrados aún.</p>
-        </div>
-      ) : (
-        <div className="grid gap-4">
-          {appointments.map((appointment) => {
-            const dateLabel = new Date(appointment.scheduledStart).toLocaleString("es-AR", {
-              weekday: "short",
-              day: "numeric",
-              month: "short",
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-
-            return (
-              <div key={appointment.id} className="card">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className="flex items-start gap-4 min-w-0">
-                    <div className="w-12 h-12 rounded-xl bg-accent/15 flex items-center justify-center shrink-0">
-                      <User className="w-6 h-6 text-accent" />
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="font-bold truncate">{appointment.client?.name || "Cliente sin nombre"}</h3>
-                      <p className="text-foreground-muted text-sm">
-                        {appointment.service?.name || "Servicio"} <span aria-hidden="true">•</span> {dateLabel}
-                      </p>
-                      {appointment.barber && (
-                        <p className="text-foreground-muted text-sm">Peluquero: {appointment.barber.name}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-                    <span className={["badge w-fit", getStatusClasses(appointment.status)].join(" ")}>
-                      {getStatusLabel(appointment.status)}
-                    </span>
-
-                    {appointment.status === "SCHEDULED" && (
-                      <button onClick={() => handleComplete(appointment)} className="btn-primary w-full sm:w-auto">
-                        Completar
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
+    <div className="space-y-8">
+      <DataTable
+        columns={[
+          {
+            key: "client" as any,
+            label: "Cliente",
+            searchable: true,
+            sortable: true,
+            render: (_, apt: AppointmentWithRelations) => apt.client?.name || "Sin cliente",
+          },
+          {
+            key: "service" as any,
+            label: "Servicio",
+            searchable: true,
+            sortable: true,
+            render: (_, apt: AppointmentWithRelations) => apt.service?.name || "Sin servicio",
+          },
+          {
+            key: "barber" as any,
+            label: "Peluquero",
+            searchable: true,
+            sortable: true,
+            render: (_, apt: AppointmentWithRelations) => apt.barber?.name || "Sin asignar",
+          },
+          {
+            key: "scheduledStart" as any,
+            label: "Fecha",
+            sortable: true,
+            render: (value) => formatDate(value),
+          },
+          {
+            key: "scheduledStart" as any,
+            label: "Hora",
+            align: "center",
+            render: (value) => formatTime(value),
+          },
+          {
+            key: "status" as any,
+            label: "Estado",
+            align: "center",
+            render: (value) => (
+              <span
+                className={`badge ${
+                  value === "SCHEDULED"
+                    ? "bg-info/15 text-info"
+                    : value === "COMPLETED"
+                      ? "bg-success/15 text-success"
+                      : "bg-error/15 text-error"
+                }`}
+              >
+                {getStatusLabel(String(value))}
+              </span>
+            ),
+          },
+          {
+            key: "id" as any,
+            label: "Acción",
+            align: "center",
+            render: (_, apt: AppointmentWithRelations) =>
+              apt.status === "SCHEDULED" && (
+                <button
+                  onClick={() => handleComplete(apt)}
+                  className="btn-primary text-xs py-1 px-3"
+                >
+                  Completar
+                </button>
+              ),
+          },
+        ]}
+        data={appointments}
+        filters={filters}
+        searchPlaceholder="Buscar cliente, servicio..."
+        emptyState={{
+          icon: "📅",
+          title: "Sin turnos",
+          description: "No hay turnos registrados aún.",
+        }}
+      />
 
       {showCompleteModal && selectedAppointment && (
         <div className="fixed inset-0 z-50 p-4 flex items-center justify-center">
@@ -197,7 +254,7 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
                   Completar turno
                 </h2>
                 <p className="text-foreground-muted text-sm mt-1">
-                  {selectedServiceName} · {selectedClientName}
+                  {selectedAppointment.service?.name || "Servicio"} · {selectedAppointment.client?.name || "Cliente"}
                 </p>
               </div>
               <button type="button" className="btn-ghost p-2 rounded-lg" onClick={closeModal} aria-label="Cerrar">
@@ -217,8 +274,9 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
                   className="input"
                   required
                 >
-                  {barberOptions.map((b) => (
-                    <option key={b.id} value={b.id} disabled={b.id === ""}>
+                  <option value="">Seleccionar peluquero</option>
+                  {barbers.map((b) => (
+                    <option key={b.id} value={b.id}>
                       {b.name}
                     </option>
                   ))}
@@ -265,4 +323,3 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
     </div>
   )
 }
-

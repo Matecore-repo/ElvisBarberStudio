@@ -1,11 +1,12 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
+import { Prisma } from "@prisma/client"
 
 export async function GET(request: NextRequest) {
   try {
     const session = await auth()
-    if (!session) {
+    if (!session?.user?.salonId) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
@@ -13,20 +14,17 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1")
     const limit = parseInt(searchParams.get("limit") || "10")
     const search = searchParams.get("search") || ""
-    const status = searchParams.get("status")
 
     const skip = (page - 1) * limit
 
-    const where: any = {}
+    const where: Prisma.ClientWhereInput = {
+      salonId: session.user.salonId
+    }
     if (search) {
       where.OR = [
         { name: { contains: search, mode: "insensitive" } },
-        { email: { contains: search, mode: "insensitive" } },
         { phone: { contains: search, mode: "insensitive" } },
       ]
-    }
-    if (status && status !== "all") {
-      where.status = status
     }
 
     const [clients, total] = await Promise.all([
@@ -65,7 +63,7 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await request.json()
-    const { name, email, phone, status } = data
+    const { name, phone, notes } = data
 
     if (!name || !phone) {
       return NextResponse.json(
@@ -76,10 +74,10 @@ export async function POST(request: NextRequest) {
 
     const client = await prisma.client.create({
       data: {
+        salonId: session.user.salonId as string,
         name,
-        email: email || null,
         phone,
-        status: status || "active",
+        notes: notes || null,
       },
     })
 

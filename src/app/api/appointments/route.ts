@@ -1,11 +1,12 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
+import { Prisma, AppointmentStatus } from "@prisma/client"
 
 export async function GET(request: NextRequest) {
   try {
     const session = await auth()
-    if (!session) {
+    if (!session?.user?.salonId) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
@@ -15,10 +16,12 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status")
 
     const skip = (page - 1) * limit
-    const where: any = {}
+    const where: Prisma.AppointmentWhereInput = {
+      salonId: session.user.salonId
+    }
 
     if (status && status !== "all") {
-      where.status = status
+      where.status = status as AppointmentStatus
     }
 
     const [appointments, total] = await Promise.all([
@@ -26,7 +29,7 @@ export async function GET(request: NextRequest) {
         where,
         skip,
         take: limit,
-        orderBy: { createdAt: "desc" },
+        orderBy: { scheduledStart: "desc" },
         include: {
           client: true,
           barber: true,
@@ -61,9 +64,9 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await request.json()
-    const { clientId, barberId, date, time, service, status } = data
+    const { clientId, barberId, date, status } = data
 
-    if (!clientId || !barberId || !date || !time) {
+    if (!clientId || !barberId || !date) {
       return NextResponse.json(
         { error: "Datos requeridos faltantes" },
         { status: 400 }
@@ -72,11 +75,11 @@ export async function POST(request: NextRequest) {
 
     const appointment = await prisma.appointment.create({
       data: {
+        salonId: session.user.salonId as string,
         clientId,
         barberId,
-        date: new Date(date),
-        time,
-        service: service || "Corte",
+        scheduledStart: new Date(date),
+        scheduledEnd: new Date(new Date(date).getTime() + 30 * 60000), // Default 30 mins
         status: status || "SCHEDULED",
       },
       include: {

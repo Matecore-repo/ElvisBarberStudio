@@ -16,6 +16,21 @@ export default async function AppointmentsPage() {
         }).catch(() => [])
     ])
 
+    // Convertir Decimals a números para serializar al cliente
+    const appointmentsForClient = appointments.map(apt => ({
+        ...apt,
+        totalAmount: apt.totalAmount ? parseFloat(apt.totalAmount.toString()) : null,
+        service: apt.service ? {
+            ...apt.service,
+            price: parseFloat(apt.service.price.toString())
+        } : null
+    }))
+
+    const barbersForClient = barbers.map(barber => ({
+        ...barber,
+        commissionValue: parseFloat(barber.commissionValue.toString())
+    }))
+
     return (
         <div className="space-y-8">
             <div>
@@ -23,7 +38,7 @@ export default async function AppointmentsPage() {
                 <p className="text-foreground-muted mt-1">Gestiona las citas de tus clientes</p>
             </div>
 
-            <AppointmentsList initialAppointments={appointments} barbers={barbers} />
+            <AppointmentsList initialAppointments={appointmentsForClient} barbers={barbersForClient} />
         </div>
     )
 }

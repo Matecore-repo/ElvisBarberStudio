@@ -12,7 +12,8 @@ import {
   Store, 
   Settings,
   LogOut,
-  X
+  X,
+  Shirt
 } from "lucide-react"
 
 interface SidebarProps {
@@ -54,8 +55,13 @@ const menuItems = [
     icon: <DollarSign className="w-5 h-5" />,
   },
   {
+    href: "/app/servicios",
+    label: "Servicios",
+    icon: <Shirt className="w-5 h-5" />,
+  },
+  {
     href: "/app/salons",
-    label: "Peluquerías",
+    label: "Salones",
     icon: <Store className="w-5 h-5" />,
   },
   {
@@ -93,7 +99,9 @@ export function Sidebar({ user, className, showClose, onClose, onNavigate }: Sid
             <Link
               key={item.href}
               href={item.href}
-              onClick={onNavigate}
+              onClick={(e) => {
+                if (onNavigate) onNavigate()
+              }}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar ${
                 isActive
                   ? "bg-accent/15 text-accent border border-accent/30"
