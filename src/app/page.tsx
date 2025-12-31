@@ -242,55 +242,110 @@ export default function Home() {
 
       {/* Contacto Section */}
       <section id="contacto" className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 bg-background-alt">
-        <div className="max-w-3xl mx-auto text-center">
-          <span className="text-accent text-xs sm:text-sm font-medium uppercase tracking-wider">Contacto</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mt-3 sm:mt-4 mb-4 sm:mb-6">
-            ¿Listo para tu{" "}
-            <span className="text-gold-gradient">Transformación</span>?
-          </h2>
-          <p className="text-foreground-muted text-base sm:text-lg mb-8 sm:mb-10">
-            Reserva tu turno ahora y experimenta el mejor servicio de barbería.
-          </p>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12 sm:mb-16 md:mb-20">
+            <span className="text-accent text-xs sm:text-sm font-medium uppercase tracking-wider">Sucursales</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium mt-3 sm:mt-4 mb-4 sm:mb-6 text-white">
+              ¿Listo para tu{" "}
+              <span className="text-gold-gradient">Transformación</span>?
+            </h2>
+            <p className="text-foreground-muted text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
+              Visita cualquiera de nuestras sucursales en Buenos Aires. Estamos listos para darte el mejor servicio de barbería.
+            </p>
+          </div>
 
-          <div className="card max-w-md mx-auto">
-            <div className="space-y-4 sm:space-y-6">
-              <div className="flex items-center gap-3 sm:gap-4 text-left">
-                <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-accent-muted flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 sm:w-6 h-5 sm:h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          {/* Branches Grid - Mobile First Responsive */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
+            {/* Branch 1 */}
+            <div className="group flex flex-col h-full p-5 sm:p-6 border border-border rounded-xl bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/60">
+              <div className="flex-1 flex flex-col justify-between">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
+                    <span className="text-accent font-bold text-sm">01</span>
+                  </div>
+                  <div>
+                    <p className="text-foreground-muted text-xs uppercase tracking-widest font-medium mb-2">Sucursal Centro</p>
+                    <p className="text-white font-semibold text-sm sm:text-base leading-relaxed">Av. Rivadavia 2222</p>
+                  </div>
+                </div>
+                <a href="tel:+541132975792" className="mt-4 inline-flex items-center text-accent hover:text-accent/80 transition-colors text-xs sm:text-sm font-medium">
+                  <span>11 3297-5792</span>
+                  <svg className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                   </svg>
-                </div>
-                <div>
-                  <p className="font-semibold text-sm sm:text-base">Dirección</p>
-                  <p className="text-foreground-muted text-xs sm:text-sm">Av. Principal 1234, Ciudad</p>
-                </div>
+                </a>
               </div>
+            </div>
 
-              <div className="flex items-center gap-3 sm:gap-4 text-left">
-                <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-accent-muted flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 sm:w-6 h-5 sm:h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            {/* Branch 2 */}
+            <div className="group flex flex-col h-full p-5 sm:p-6 border border-border rounded-xl bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/60">
+              <div className="flex-1 flex flex-col justify-between">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
+                    <span className="text-accent font-bold text-sm">02</span>
+                  </div>
+                  <div>
+                    <p className="text-foreground-muted text-xs uppercase tracking-widest font-medium mb-2">Sucursal Recoleta</p>
+                    <p className="text-white font-semibold text-sm sm:text-base leading-relaxed">Viamonte 2600</p>
+                  </div>
+                </div>
+                <a href="tel:+541138326831" className="mt-4 inline-flex items-center text-accent hover:text-accent/80 transition-colors text-xs sm:text-sm font-medium">
+                  <span>11 3832-6831</span>
+                  <svg className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                   </svg>
-                </div>
-                <div>
-                  <p className="font-semibold text-sm sm:text-base">Teléfono</p>
-                  <p className="text-foreground-muted text-xs sm:text-sm">+54 11 1234-5678</p>
-                </div>
+                </a>
               </div>
+            </div>
 
-              <div className="flex items-center gap-3 sm:gap-4 text-left">
-                <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-accent-muted flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 sm:w-6 h-5 sm:h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+            {/* Branch 3 */}
+            <div className="group flex flex-col h-full p-5 sm:p-6 border border-border rounded-xl bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/60">
+              <div className="flex-1 flex flex-col justify-between">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
+                    <span className="text-accent font-bold text-sm">03</span>
+                  </div>
+                  <div>
+                    <p className="text-foreground-muted text-xs uppercase tracking-widest font-medium mb-2">Sucursal Caballito</p>
+                    <p className="text-white font-semibold text-sm sm:text-base leading-relaxed">Av. Iriarte 2847</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-sm sm:text-base">Horario</p>
-                  <p className="text-foreground-muted text-xs sm:text-sm">Lun - Sáb: 9:00 - 20:00</p>
+                <a href="tel:+541169714636" className="mt-4 inline-flex items-center text-accent hover:text-accent/80 transition-colors text-xs sm:text-sm font-medium">
+                  <span>11 6971-4636</span>
+                  <svg className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            {/* Branch 4 */}
+            <div className="group flex flex-col h-full p-5 sm:p-6 border border-border rounded-xl bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/60">
+              <div className="flex-1 flex flex-col justify-between">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
+                    <span className="text-accent font-bold text-sm">04</span>
+                  </div>
+                  <div>
+                    <p className="text-foreground-muted text-xs uppercase tracking-widest font-medium mb-2">Sucursal Flores</p>
+                    <p className="text-white font-semibold text-sm sm:text-base leading-relaxed">Av. Iriarte 1673</p>
+                  </div>
+                </div>
+                <div className="mt-4 inline-flex items-center text-foreground-muted/60 text-xs sm:text-sm font-medium">
+                  <span>Sin línea disponible</span>
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* CTA Section */}
+          <div className="mt-12 sm:mt-16 md:mt-20 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+            <a href="#" className="btn-primary min-h-11 sm:min-h-12 px-6 sm:px-8 text-xs sm:text-sm w-full sm:w-auto text-center">
+              Reservar Turno
+            </a>
+            <a href="#" className="inline-flex items-center justify-center min-h-11 sm:min-h-12 px-6 sm:px-8 border border-border rounded-lg hover:border-accent/50 hover:bg-card/40 transition-all text-xs sm:text-sm font-medium w-full sm:w-auto">
+              Ver Ubicaciones en Mapa
+            </a>
           </div>
         </div>
       </section>
