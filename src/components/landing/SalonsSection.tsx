@@ -20,34 +20,48 @@ export function SalonsSection() {
         </div>
 
         {/* Branches Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
-          {salons.map((salon, idx) => (
-            <div key={salon.id} className="group flex flex-col h-full p-5 sm:p-6 border border-border rounded-xl bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/60">
-              <div className="flex-1 flex flex-col justify-between">
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
-                    <span className="text-accent font-bold text-sm">{String(idx + 1).padStart(2, "0")}</span>
-                  </div>
-                  <div>
-                    <p className="text-foreground-muted text-xs uppercase tracking-widest font-medium mb-2">{salon.name}</p>
-                    <p className="text-white font-semibold text-sm sm:text-base leading-relaxed">{salon.address}</p>
-                  </div>
+        <div className="min-h-[200px]">
+          {salons.length === 0 ? (
+            <div className="flex justify-center items-center h-full">
+              <div className="animate-pulse flex flex-col items-center gap-4 w-full">
+                <div className="flex gap-6 w-full max-w-6xl">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="flex-1 h-48 bg-card/20 rounded-xl"></div>
+                  ))}
                 </div>
-                {salon.phone ? (
-                  <a href={`tel:${salon.phone}`} className="mt-4 inline-flex items-center text-accent hover:text-accent/80 transition-colors text-xs sm:text-sm font-medium">
-                    <span>{salon.phone}</span>
-                    <svg className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </a>
-                ) : (
-                  <div className="mt-4 inline-flex items-center text-foreground-muted/60 text-xs sm:text-sm font-medium">
-                    <span>Sin línea disponible</span>
-                  </div>
-                )}
               </div>
             </div>
-          ))}
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
+              {salons.map((salon, idx) => (
+                <div key={salon.id} className="group flex flex-col h-full p-5 sm:p-6 border border-border rounded-xl bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/60">
+                  <div className="flex-1 flex flex-col justify-between">
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
+                        <span className="text-accent font-bold text-sm">{String(idx + 1).padStart(2, "0")}</span>
+                      </div>
+                      <div>
+                        <p className="text-foreground-muted text-xs uppercase tracking-widest font-medium mb-2">{salon.name}</p>
+                        <p className="text-white font-semibold text-sm sm:text-base leading-relaxed">{salon.address}</p>
+                      </div>
+                    </div>
+                    {salon.phone ? (
+                      <a href={`tel:${salon.phone}`} className="mt-4 inline-flex items-center text-accent hover:text-accent/80 transition-colors text-xs sm:text-sm font-medium">
+                        <span>{salon.phone}</span>
+                        <svg className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </a>
+                    ) : (
+                      <div className="mt-4 inline-flex items-center text-foreground-muted/60 text-xs sm:text-sm font-medium">
+                        <span>Sin línea disponible</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* CTA Section */}

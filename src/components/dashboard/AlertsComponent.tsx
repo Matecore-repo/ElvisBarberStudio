@@ -37,10 +37,10 @@ export function AlertsComponent({ alerts }: AlertsComponentProps) {
       dot: "bg-yellow-500",
     },
     info: {
-      bg: "bg-blue-500/10",
+      bg: "bg-blue-500/5 border-blue-500/10",
       border: "border-blue-500/20",
-      icon: "text-blue-500",
-      dot: "bg-blue-500",
+      icon: "text-blue-400",
+      dot: "bg-blue-400",
     },
   }
 
