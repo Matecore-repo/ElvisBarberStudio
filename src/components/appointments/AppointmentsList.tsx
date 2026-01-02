@@ -182,13 +182,13 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
             key: "scheduledStart" as any,
             label: "Fecha",
             sortable: true,
-            render: (value) => formatDate(value),
+            render: (value: any) => value ? formatDate(value) : '-',
           },
           {
             key: "scheduledStart" as any,
             label: "Hora",
             align: "center",
-            render: (value) => formatTime(value),
+            render: (value: any) => value ? formatTime(value) : '-',
           },
           {
             key: "status" as any,
@@ -196,13 +196,12 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
             align: "center",
             render: (value) => (
               <span
-                className={`badge ${
-                  value === "SCHEDULED"
-                    ? "bg-info/15 text-info"
-                    : value === "COMPLETED"
-                      ? "bg-success/15 text-success"
-                      : "bg-error/15 text-error"
-                }`}
+                className={`badge ${value === "SCHEDULED"
+                  ? "bg-info/15 text-info"
+                  : value === "COMPLETED"
+                    ? "bg-success/15 text-success"
+                    : "bg-error/15 text-error"
+                  }`}
               >
                 {getStatusLabel(String(value))}
               </span>

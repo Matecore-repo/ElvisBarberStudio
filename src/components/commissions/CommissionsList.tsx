@@ -119,12 +119,11 @@ export function CommissionsList({ initialCommissions }: CommissionsListProps) {
             key: "createdAt" as any,
             label: "Fecha",
             sortable: true,
-            render: (value) =>
-              new Date(value).toLocaleDateString("es-AR", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              }),
+            render: (value: any) => value ? new Date(value).toLocaleDateString("es-AR", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            }) : '-',
           },
           {
             key: "status" as any,
@@ -132,9 +131,8 @@ export function CommissionsList({ initialCommissions }: CommissionsListProps) {
             align: "center",
             render: (value) => (
               <span
-                className={`badge ${
-                  value === "PENDING" ? "bg-warning/15 text-warning" : "bg-success/15 text-success"
-                }`}
+                className={`badge ${value === "PENDING" ? "bg-warning/15 text-warning" : "bg-success/15 text-success"
+                  }`}
               >
                 {value === "PENDING" ? "Pendiente" : "Pagada"}
               </span>
