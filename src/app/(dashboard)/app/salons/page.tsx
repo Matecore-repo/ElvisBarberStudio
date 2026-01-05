@@ -229,35 +229,35 @@ export default function SalonsPage() {
       <DataTable
         columns={[
           {
-            key: "name" as any,
+            key: "name",
             label: "Nombre",
             searchable: true,
             sortable: true,
           },
           {
-            key: "address" as any,
+            key: "address",
             label: "Dirección",
             searchable: true,
             sortable: true,
           },
           {
-            key: "phone" as any,
+            key: "phone",
             label: "Teléfono",
             searchable: true,
           },
           {
-            key: "createdAt" as any,
+            key: "createdAt",
             label: "Fecha de creación",
             sortable: true,
             render: (value) =>
-              value ? new Date(value).toLocaleDateString("es-AR", {
+              value ? new Date(value as string).toLocaleDateString("es-AR", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
               }) : "-",
           },
           {
-            key: "id" as any,
+            key: "id",
             label: "Acciones",
             align: "center",
             render: (_, salon: Salon) => (

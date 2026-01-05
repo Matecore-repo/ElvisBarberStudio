@@ -454,19 +454,19 @@ export function ServicesList({ salonId }: { salonId: string }) {
                       label: "Nombre",
                       searchable: true,
                       sortable: true,
-                      render: (value: any) => <span className="font-medium text-white">{String(value)}</span>
+                      render: (value) => <span className="font-medium text-white">{String(value)}</span>
                     },
                     {
                       key: "durationMinutes" as const,
                       label: "Duración",
                       align: "center",
-                      render: (value: any) => <span className="text-xs text-foreground-muted">{value} min</span>,
+                      render: (value) => <span className="text-xs text-foreground-muted">{String(value)} min</span>,
                     },
                     {
                       key: "price" as const,
                       label: "Precio",
                       align: "right",
-                      render: (value: any) => <span className="text-accent font-mono">${parseFloat(String(value)).toFixed(2)}</span>,
+                      render: (value) => <span className="text-accent font-mono">${parseFloat(String(value)).toFixed(2)}</span>,
                     },
                     {
                       key: "id" as const,
@@ -515,19 +515,19 @@ export function ServicesList({ salonId }: { salonId: string }) {
                         label: "Nombre",
                         searchable: true,
                         sortable: true,
-                        render: (value: any) => <span className="font-medium text-white">{String(value)}</span>
+                        render: (value) => <span className="font-medium text-white">{String(value)}</span>
                       },
                       {
                         key: "durationMinutes" as const,
                         label: "Duración",
                         align: "center",
-                        render: (value: any) => <span className="text-xs text-foreground-muted">{value} min</span>,
+                        render: (value) => <span className="text-xs text-foreground-muted">{String(value)} min</span>,
                       },
                       {
                         key: "price" as const,
                         label: "Precio",
                         align: "right",
-                        render: (value: any) => <span className="text-accent font-mono">${parseFloat(String(value)).toFixed(2)}</span>,
+                        render: (value) => <span className="text-accent font-mono">${parseFloat(String(value)).toFixed(2)}</span>,
                       },
                       {
                         key: "id" as const,

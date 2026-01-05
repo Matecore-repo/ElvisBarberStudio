@@ -16,6 +16,7 @@ export async function PUT(
     const data = await request.json()
     const { name } = data
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const category = await (prisma as any).serviceCategory.update({
       where: { id },
       data: { name },
@@ -43,6 +44,7 @@ export async function DELETE(
 
     const { id } = await params
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (prisma as any).serviceCategory.delete({
       where: { id },
     })

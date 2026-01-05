@@ -28,7 +28,7 @@ interface AppointmentsListProps {
   barbers: BarberSerialized[]
 }
 
-type AppointmentStatus = "SCHEDULED" | "COMPLETED" | "CANCELED"
+// Type is used in status values but type inference handles it
 
 export function AppointmentsList({ initialAppointments, barbers }: AppointmentsListProps) {
   const [appointments, setAppointments] = useState(initialAppointments)
@@ -158,40 +158,43 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
       <DataTable
         columns={[
           {
-            key: "client" as any,
+             
+            key: "client" as keyof AppointmentWithRelations,
             label: "Cliente",
             searchable: true,
             sortable: true,
             render: (_, apt: AppointmentWithRelations) => apt.client?.name || "Sin cliente",
           },
           {
-            key: "service" as any,
+             
+            key: "service" as keyof AppointmentWithRelations,
             label: "Servicio",
             searchable: true,
             sortable: true,
             render: (_, apt: AppointmentWithRelations) => apt.service?.name || "Sin servicio",
           },
           {
-            key: "barber" as any,
+             
+            key: "barber" as keyof AppointmentWithRelations,
             label: "Peluquero",
             searchable: true,
             sortable: true,
             render: (_, apt: AppointmentWithRelations) => apt.barber?.name || "Sin asignar",
           },
           {
-            key: "scheduledStart" as any,
+            key: "scheduledStart",
             label: "Fecha",
             sortable: true,
-            render: (value: any) => value ? formatDate(value) : '-',
+            render: (value) => value ? formatDate(value as Date | string) : '-',
           },
           {
-            key: "scheduledStart" as any,
+            key: "scheduledStart",
             label: "Hora",
             align: "center",
-            render: (value: any) => value ? formatTime(value) : '-',
+            render: (value) => value ? formatTime(value as Date | string) : '-',
           },
           {
-            key: "status" as any,
+            key: "status",
             label: "Estado",
             align: "center",
             render: (value) => (
@@ -208,7 +211,7 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
             ),
           },
           {
-            key: "id" as any,
+            key: "id",
             label: "Acción",
             align: "center",
             render: (_, apt: AppointmentWithRelations) =>

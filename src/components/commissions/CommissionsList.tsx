@@ -88,45 +88,48 @@ export function CommissionsList({ initialCommissions }: CommissionsListProps) {
       <DataTable
         columns={[
           {
-            key: "barber" as any,
+             
+            key: "barber" as keyof CommissionWithRelations,
             label: "Peluquero",
             searchable: true,
             sortable: true,
             render: (_, commission: CommissionWithRelations) => commission.barber.name,
           },
           {
-            key: "appointment" as any,
+             
+            key: "appointment" as keyof CommissionWithRelations,
             label: "Cliente",
             searchable: true,
             sortable: true,
             render: (_, commission: CommissionWithRelations) => commission.appointment?.client?.name || "Sin cliente",
           },
           {
-            key: "appointment" as any,
+             
+            key: "appointment" as keyof CommissionWithRelations,
             label: "Servicio",
             searchable: true,
             sortable: true,
             render: (_, commission: CommissionWithRelations) => commission.appointment?.service?.name || "Sin servicio",
           },
           {
-            key: "amount" as any,
+            key: "amount",
             label: "Monto",
             align: "right",
             sortable: true,
             render: (value) => `$${parseFloat(String(value)).toFixed(2)}`,
           },
           {
-            key: "createdAt" as any,
+            key: "createdAt",
             label: "Fecha",
             sortable: true,
-            render: (value: any) => value ? new Date(value).toLocaleDateString("es-AR", {
+            render: (value) => value ? new Date(value as string | Date).toLocaleDateString("es-AR", {
               year: "numeric",
               month: "2-digit",
               day: "2-digit",
             }) : '-',
           },
           {
-            key: "status" as any,
+            key: "status",
             label: "Estado",
             align: "center",
             render: (value) => (
@@ -139,7 +142,7 @@ export function CommissionsList({ initialCommissions }: CommissionsListProps) {
             ),
           },
           {
-            key: "id" as any,
+            key: "id",
             label: "Acción",
             align: "center",
             render: (_, commission: CommissionWithRelations) =>

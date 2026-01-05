@@ -96,7 +96,7 @@ export default function ClientsComponent({ initialClients }: ClientsComponentPro
     }
   }
 
-  const filters: any[] = []
+  const filters: { key: string; label: string; options: { value: string; label: string }[] }[] = []
 
   return (
     <div className="space-y-8">
@@ -191,36 +191,36 @@ export default function ClientsComponent({ initialClients }: ClientsComponentPro
       <DataTable
         columns={[
           {
-            key: "name" as any,
+            key: "name",
             label: "Nombre",
             searchable: true,
             sortable: true,
           },
           {
-            key: "phone" as any,
+            key: "phone",
             label: "Teléfono",
             searchable: true,
             sortable: true,
           },
           {
-            key: "notes" as any,
+            key: "notes",
             label: "Notas",
             searchable: true,
             render: (value) => (value ? String(value).substring(0, 50) : "-"),
           },
           {
-            key: "createdAt" as any,
+            key: "createdAt",
             label: "Fecha de registro",
             sortable: true,
             render: (value) =>
-              value ? new Date(value).toLocaleDateString("es-AR", {
+              value ? new Date(value as string | Date).toLocaleDateString("es-AR", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
               }) : "-",
           },
           {
-            key: "id" as any,
+            key: "id",
             label: "Acciones",
             align: "center",
             render: (_, client: Client) => (

@@ -106,12 +106,12 @@ export function Sidebar({ user, className, showClose, onClose, onNavigate }: Sid
             <Link
               key={item.href}
               href={item.href}
-              onClick={(e) => {
+              onClick={() => {
                 if (onNavigate) onNavigate()
               }}
               className={`group flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200 relative overflow-hidden ${isActive
-                  ? "text-white bg-white/5 border border-white/5 shadow-sm"
-                  : "text-foreground-muted hover:text-white hover:bg-white/5"
+                ? "text-white bg-white/5 border border-white/5 shadow-sm"
+                : "text-foreground-muted hover:text-white hover:bg-white/5"
                 }`}
             >
               <div className={`absolute left-0 top-0 bottom-0 w-1 bg-accent transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-0 group-hover:opacity-50"}`} />
