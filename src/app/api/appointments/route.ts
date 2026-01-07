@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await request.json()
-    const { clientId, barberId, date, status } = data
+    const { clientId, barberId, serviceId, date, status, durationMinutes } = data
 
     if (!clientId || !barberId || !date) {
       return NextResponse.json(
@@ -73,13 +73,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const duration = durationMinutes || 30
+
     const appointment = await prisma.appointment.create({
       data: {
         salonId: session.user.salonId as string,
         clientId,
         barberId,
+        serviceId: serviceId || null,
         scheduledStart: new Date(date),
-        scheduledEnd: new Date(new Date(date).getTime() + 30 * 60000), // Default 30 mins
+        scheduledEnd: new Date(new Date(date).getTime() + duration * 60000),
         status: status || "SCHEDULED",
       },
       include: {

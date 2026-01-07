@@ -17,8 +17,14 @@ export default auth((req) => {
         return NextResponse.redirect(new URL("/login", req.url))
     }
 
+    // Rutas públicas de API (solo GET)
+    const isPublicApiRoute = (
+        (pathname.startsWith("/api/services") || pathname.startsWith("/api/salons")) &&
+        req.method === "GET"
+    )
+
     // Si intenta acceder a API protegida sin estar logueado
-    if (isApiRoute && !isAuthApiRoute && !isLoggedIn) {
+    if (isApiRoute && !isAuthApiRoute && !isPublicApiRoute && !isLoggedIn) {
         return NextResponse.json(
             { error: "No autorizado" },
             { status: 401 }

@@ -5,10 +5,11 @@ import { Prisma } from "@prisma/client"
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth()
-    if (!session?.user?.salonId) {
-      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
-    }
+    // Permitir acceso público a peluquerías
+    // const session = await auth()
+    // if (!session?.user?.salonId) {
+    //   return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    // }
 
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("search") || ""

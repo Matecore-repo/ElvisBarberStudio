@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Elvis Barber Studio - CRM & Dashboard ✂️
 
-## Getting Started
+Sistema integral de gestión de turnos, clientes y comisiones para barberías premium.
 
-First, run the development server:
+## 🚀 Inicio Rápido
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Instalar dependencias:** `npm install`
+2. **Configurar variables de entorno:** Copia `.env.example` a `.env` y configura tu base de datos y secretos.
+3. **Ejecutar en desarrollo:** `npm run dev`
+4. **Build para producción:** `npm run build`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📂 Documentación
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+La documentación detallada se encuentra en la carpeta `/docs`. Aquí tienes los puntos de entrada principales:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **[Índice de Documentación](./docs/INDEX.md)**: Mapa completo de toda la documentación disponible.
+- **[Guía de Inicio Rápido](./docs/GUIA_INICIO_RAPIDO.md)**: Cómo empezar a usar el dashboard.
+- **[Arquitectura](./docs/ARCHITECTURE.md)**: Detalles técnicos sobre el stack y la estructura.
+- **[Referencia de API](./docs/API_REFERENCE.md)**: Documentación de los endpoints disponibles.
 
-## Learn More
+## 🛠️ Stack Tecnológico
 
-To learn more about Next.js, take a look at the following resources:
+- **Frontend:** Next.js 16.1.1 (App Router, Turbopack)
+- **Estilos:** Tailwind CSS (Dark Mode Premium)
+- **Base de Datos:** PostgreSQL (Prisma ORM)
+- **Autenticación:** Auth.js (NextAuth)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✨ Características Principales
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Dashboard Ejecutivo:** KPIs en tiempo real (Ingresos, Ocupación, Salud del negocio).
+- **Gestión de Turnos:** Sistema intuitivo de agendamiento.
+- **Control de Comisiones:** Cálculo automático por peluquero.
+- **Gestión de Clientes:** CRM con historial y detección automática de churn.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+Para más detalles, consulta el **[Resumen Ejecutivo](./docs/RESUMEN_EJECUTIVO.md)**.

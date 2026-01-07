@@ -1,0 +1,65 @@
+﻿
+> elvis-barber-studio@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+node.exe : ΓÜá The "middleware" file convention is 
+deprecated. Please use "proxy" instead. Learn more: 
+https://nextjs.org/docs/messages/middleware-to-proxy
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Users\iange\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ΓÜá The "middl 
+   e...leware-to-proxy:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 4.4s
+  Running TypeScript ...
+Failed to compile.
+
+./src/components/commissions/CommissionsList.tsx:123:24
+Type error: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', 
+gave the following error.
+    Argument of type 'string | number | Date | 
+BarberSerialized | (AppointmentSerialized & { client: { id: 
+string; salonId: string; name: string; createdAt: Date; 
+updatedAt: Date; phone: string | null; notes: string | 
+null; } | null; service: ServiceSerialized | null; }) | 
+null' is not assignable to parameter of type 'string | 
+number | Date'.
+      Type 'null' is not assignable to type 'string | 
+number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave 
+the following error.
+    Argument of type 'string | number | Date | 
+BarberSerialized | (AppointmentSerialized & { client: { id: 
+string; salonId: string; name: string; createdAt: Date; 
+updatedAt: Date; phone: string | null; notes: string | 
+null; } | null; service: ServiceSerialized | null; }) | 
+null' is not assignable to parameter of type 'string | 
+number'.
+      Type 'null' is not assignable to type 'string | 
+number'.
+
+[0m [90m 121 |[39m             sortable[33m:[39m 
+[36mtrue[39m[33m,[39m
+ [90m 122 |[39m             render[33m:[39m (value) 
+[33m=>[39m
+[31m[1m>[22m[39m[90m 123 |[39m               
+[36mnew[39m [33mDate[39m(value)[33m.[39mtoLocaleDateSt
+ring([32m"es-AR"[39m[33m,[39m {
+ [90m     |[39m                        
+[31m[1m^[22m[39m
+ [90m 124 |[39m                 year[33m:[39m 
+[32m"numeric"[39m[33m,[39m
+ [90m 125 |[39m                 month[33m:[39m 
+[32m"2-digit"[39m[33m,[39m
+ [90m 126 |[39m                 day[33m:[39m 
+[32m"2-digit"[39m[33m,[39m[0m
+Next.js build worker exited with code: 1 and signal: null

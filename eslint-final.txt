@@ -1,0 +1,22 @@
+﻿
+D:\Nuevo\ElvisBarberStudio\src\app\(dashboard)\app\appointments\appointments-component.tsx
+  256:25  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  264:25  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  272:25  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+D:\Nuevo\ElvisBarberStudio\src\app\(dashboard)\app\clients\clients-component.tsx
+  99:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Nuevo\ElvisBarberStudio\src\components\appointments\AppointmentsList.tsx
+  161:13  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  169:13  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  177:13  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+D:\Nuevo\ElvisBarberStudio\src\components\commissions\CommissionsList.tsx
+   91:13  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   99:13  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  107:13  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+Γ£û 10 problems (1 error, 9 warnings)
+  0 errors and 9 warnings potentially fixable with the `--fix` option.
+

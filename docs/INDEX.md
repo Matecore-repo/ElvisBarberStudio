@@ -168,7 +168,19 @@ Contenido:
 👉 Resumen ejecutivo del trabajo entregado
 ```
 
-### 9. **DASHBOARD_IMPLEMENTATION.md** (Este archivo)
+### 9. **ARCHITECTURE.md**
+```
+Nivel: Developer / Architect
+Contenido: Estructura del proyecto, stack técnico y seguridad.
+```
+
+### 10. **API_REFERENCE.md**
+```
+Nivel: Frontend/Backend Developer
+Contenido: Documentación de todos los endpoints REST del sistema.
+```
+
+### 11. **DASHBOARD_IMPLEMENTATION.md** (Este archivo)
 ```
 Nivel: Proyecto
 Largo: 11 páginas
