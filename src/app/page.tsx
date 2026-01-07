@@ -1,32 +1,15 @@
 import { Navbar } from '@/components/landing/Navbar';
 import { Hero } from '@/components/landing/Hero';
 import { ServicesSection } from '@/components/landing/ServicesSection';
-import { TeamSection } from '@/components/landing/TeamSection';
+import { ValuesSection } from '@/components/landing/ValuesSection';
+import { LocationsSection } from '@/components/landing/LocationsSection';
 import { Footer } from '@/components/landing/Footer';
-
-interface Staff {
-  id: string;
-  name: string;
-  active: boolean;
-  commissionRateDefault: number;
-}
 
 interface Service {
   id: string;
   name: string;
   price: number;
   description: string;
-}
-
-async function getStaff(): Promise<Staff[]> {
-  try {
-    const res = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/staff`, {
-      cache: 'no-store',
-    });
-    return res.ok ? res.json() : [];
-  } catch {
-    return [];
-  }
 }
 
 async function getServices(): Promise<Service[]> {
@@ -41,7 +24,6 @@ async function getServices(): Promise<Service[]> {
 }
 
 export default async function Home() {
-  const staff = await getStaff();
   const services = await getServices();
 
   return (
@@ -58,8 +40,11 @@ export default async function Home() {
       {/* Services */}
       <ServicesSection services={services} />
 
-      {/* Team */}
-      <TeamSection staff={staff} />
+      {/* Values */}
+      <ValuesSection />
+
+      {/* Locations */}
+      <LocationsSection />
 
       {/* Footer */}
       <Footer />

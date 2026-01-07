@@ -66,13 +66,13 @@ export const Hero = () => {
       <div className="pointer-events-none absolute left-0 top-1/2 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-gradient-radial from-amber-500/20 to-transparent blur-3xl" />
 
       {/* Main Content */}
-      <div className="relative z-10 flex h-full items-center">
+      <div className="relative z-10 flex h-full items-center pt-32">
         <div className="container mx-auto px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="max-w-3xl"
+            className="max-w-3xl pt-16 md:pt-4"
           >
             {/* Small Label */}
             <motion.div
@@ -91,7 +91,7 @@ export const Hero = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.7, delay: 0.35 }}
-              className="mb-6 text-5xl font-bold leading-[1.1] tracking-tight text-white md:text-6xl lg:text-7xl"
+              className="mb-4 md:mb-6 text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
             >
               Estilo y{" "}
               <br className="hidden sm:block" />
@@ -105,7 +105,7 @@ export const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="mb-10 max-w-2xl text-lg leading-relaxed text-gray-300 md:text-xl"
+              className="mb-6 md:mb-10 max-w-2xl text-base md:text-lg leading-relaxed text-gray-300 lg:text-xl"
             >
               Experimenta el cuidado premium con nuestros barberos certificados.
               Diseños modernos, técnica clásica y un servicio excepcional.
@@ -147,7 +147,7 @@ export const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="mt-16 grid grid-cols-3 gap-8 border-t border-white/10 pt-8"
+              className="mt-8 md:mt-16 grid grid-cols-3 gap-4 md:gap-8 border-t border-white/10 pt-6 md:pt-8"
             >
               <div>
                 <div className="gold-metallic-text mb-1 text-2xl font-bold md:text-3xl">

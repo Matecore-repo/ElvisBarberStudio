@@ -1,6 +1,7 @@
 'use client';
 
-import { Clock, Users, Zap } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 interface Service {
@@ -15,83 +16,127 @@ interface ServicesSectionProps {
 }
 
 export const ServicesSection = ({ services }: ServicesSectionProps) => {
-  const serviceIcons = [
-    <Zap key="zap" className="w-6 h-6" />,
-    <Clock key="clock" className="w-6 h-6" />,
-    <Users key="users" className="w-6 h-6" />,
-  ];
+  const [isVisible, setIsVisible] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentRef = tableRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
 
   return (
     <section id="servicios" className="relative py-20 px-4 sm:px-6 lg:px-8">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-yellow-600/5 to-transparent pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div
+        ref={tableRef}
+        className="max-w-3xl mx-auto relative z-10"
+      >
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-            <span className="text-white">Nuestros</span>
-            <span className="text-yellow-500 ml-3">Servicios</span>
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+            <span className="text-white">Nuestros </span>
+            <span className="gold-gradient-text">Servicios</span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-            Ofrecemos una variedad de servicios premium diseñados para mantener tu estilo impecable
+          <p className="text-gray-400 text-lg">
+            Servicios profesionales de barbería premium
           </p>
         </div>
 
-        {/* Services Grid */}
+        {/* Pricing Table */}
         {services.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
-            {services.map((service, idx) => (
-              <div
-                key={service.id}
-                className="group relative border border-neutral-800 rounded-xl p-6 bg-neutral-900/50 hover:border-yellow-600/50 hover:bg-neutral-900 transition-all duration-300"
-              >
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-600/0 to-yellow-600/0 group-hover:from-yellow-600/10 group-hover:to-yellow-600/5 rounded-xl transition-all duration-300 pointer-events-none" />
-
-                <div className="relative z-10">
-                  {/* Icon */}
-                  <div className="mb-4 text-yellow-500 group-hover:text-yellow-400 transition-colors">
-                    {serviceIcons[idx % serviceIcons.length]}
-                  </div>
-
-                  {/* Name */}
-                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-yellow-400 transition-colors">
-                    {service.name}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-gray-500 text-sm mb-4">{service.description}</p>
-
-                  {/* Price */}
-                  <div className="flex items-baseline gap-1 mb-4">
-                    <span className="text-3xl font-bold text-yellow-500">${service.price}</span>
-                  </div>
-
-                  {/* CTA Button */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full border-yellow-600/30 text-yellow-500 hover:bg-yellow-600/10 group-hover:border-yellow-500"
+          <div className="rounded-xl border border-neutral-800 bg-neutral-900/50 overflow-hidden shadow-lg backdrop-blur-sm">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-neutral-800 bg-neutral-900/80">
+                  <th className="text-left py-4 px-6 font-semibold text-sm text-white">
+                    Servicio
+                  </th>
+                  <th className="text-right py-4 px-6 font-semibold text-sm text-white">
+                    Precio
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {services.map((service, index) => (
+                  <tr
+                    key={service.id}
+                    className="border-b border-neutral-800 last:border-b-0 transition-colors duration-200 hover:bg-neutral-800/50 group"
+                    style={{
+                      opacity: isVisible ? 1 : 0,
+                      transform: isVisible ? 'translateY(0)' : 'translateY(10px)',
+                      transition: `opacity 0.5s ease-out ${index * 0.1}s, transform 0.5s ease-out ${index * 0.1}s`,
+                      willChange: isVisible ? 'auto' : 'opacity, transform',
+                    }}
                   >
-                    Agendar
-                  </Button>
-                </div>
-              </div>
-            ))}
+                    <td className="py-5 px-6">
+                      <div className="flex flex-col">
+                        <span className="font-medium text-white group-hover:text-yellow-400 transition-colors">
+                          {service.name}
+                        </span>
+                        {service.description && (
+                          <span className="text-sm text-gray-500 mt-0.5">
+                            {service.description}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-5 px-6 text-right">
+                      <span className="font-semibold text-lg gold-metallic-text tabular-nums">
+                        ${service.price}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         ) : (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-gray-500 border border-neutral-800 rounded-xl bg-neutral-900/50">
             <p className="text-lg">No hay servicios disponibles en este momento</p>
           </div>
         )}
 
-        {/* Bottom CTA */}
-        <div className="text-center">
-          <p className="text-gray-400 mb-4">¿Tienes dudas sobre nuestros servicios?</p>
-          <Button className="bg-yellow-600 hover:bg-yellow-500 text-black font-semibold">
-            Contacta con nosotros
-          </Button>
+        {/* Footer Note */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-500 mb-6">
+            Todos los servicios incluyen consulta personalizada
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Link href="/login">
+              <Button className="gold-metallic-button font-semibold px-6 py-3 hover:scale-105 transition-transform">
+                Reservar Cita
+              </Button>
+            </Link>
+            <a href="#contacto">
+              <Button
+                variant="outline"
+                className="border-neutral-700 text-white hover:bg-neutral-800 px-6 py-3"
+              >
+                Ver Ubicación
+              </Button>
+            </a>
+          </div>
         </div>
       </div>
     </section>
