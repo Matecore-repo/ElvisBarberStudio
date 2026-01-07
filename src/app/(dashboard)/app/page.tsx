@@ -196,6 +196,10 @@ export default async function DashboardPage() {
     service: apt.service ? {
       ...apt.service,
       price: parseFloat(apt.service.price.toString())
+    } : null,
+    barber: apt.barber ? {
+      ...apt.barber,
+      commissionValue: parseFloat(apt.barber.commissionValue.toString())
     } : null
   })) as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
 
