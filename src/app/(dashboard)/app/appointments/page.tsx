@@ -1,53 +1,35 @@
-import { prisma } from "@/lib/prisma"
-import { AppointmentsComponent } from "./appointments-component"
+import { prisma } from '@/lib/prisma';
+import { AppointmentsTable } from '@/components/dashboard/AppointmentsTable';
 
 export default async function AppointmentsPage() {
-    const [appointments, barbers, clients, services] = await Promise.all([
-        prisma.appointment.findMany({
-            include: {
-                client: true,
-                service: true,
-                barber: true,
-            },
-            orderBy: { scheduledStart: "desc" }
-        }).catch(() => []),
-        prisma.barber.findMany({
-            where: { active: true }
-        }).catch(() => []),
-        prisma.client.findMany({
-            orderBy: { name: "asc" }
-        }).catch(() => []),
-        prisma.service.findMany({
-            orderBy: { name: "asc" }
-        }).catch(() => [])
-    ])
+  const sales = await prisma.sale.findMany({
+    include: {
+      customer: true,
+      staff: true,
+    },
+    orderBy: {
+      dateTime: 'desc',
+    },
+  }).catch(() => []);
 
-    // Convertir Decimals a números para serializar al cliente
-    const appointmentsForClient = appointments.map(apt => ({
-        ...apt,
-        totalAmount: apt.totalAmount ? parseFloat(apt.totalAmount.toString()) : null,
-        service: apt.service ? {
-            ...apt.service,
-            price: parseFloat(apt.service.price.toString())
-        } : null
-    }))
+  const appointmentsForClient = sales.map((sale) => ({
+    id: sale.id,
+    dateTime: sale.dateTime.toISOString(),
+    customer: sale.customer,
+    staff: sale.staff,
+    paymentMethod: sale.paymentMethod,
+    totalAmount: sale.totalAmount ? parseFloat(sale.totalAmount.toString()) : null,
+    servicesText: sale.servicesText,
+  }));
 
-    const barbersForClient = barbers.map(barber => ({
-        ...barber,
-        commissionValue: parseFloat(barber.commissionValue.toString())
-    }))
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold">Turnos</h1>
+        <p className="text-gray-600 mt-1">Gestiona los turnos registrados</p>
+      </div>
 
-    const servicesForClient = services.map(service => ({
-        ...service,
-        price: parseFloat(service.price.toString())
-    }))
-
-    return (
-        <AppointmentsComponent
-            initialAppointments={appointmentsForClient}
-            barbers={barbersForClient}
-            clients={clients}
-            services={servicesForClient}
-        />
-    )
+      <AppointmentsTable appointments={appointmentsForClient} />
+    </div>
+  );
 }

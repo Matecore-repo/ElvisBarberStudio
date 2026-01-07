@@ -1,0 +1,89 @@
+// Modelo simplificado para Caja y Comisiones - Planilla Digital
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Clientes (mínimo)
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  sales Sale[]
+  
+  @@map("customers")
+}
+
+// Barberos/Peluqueros
+model Staff {
+  id                      String   @id @default(cuid())
+  name                    String
+  commissionRateDefault   Float    @default(0.4) // 40% por defecto
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  
+  sales Sale[]
+  commissionPayments CommissionPayment[]
+  
+  @@map("staff")
+}
+
+// Ventas/Atenciones (línea de planilla)
+model Sale {
+  id              String   @id @default(cuid())
+  dateTime        DateTime @default(now())
+  customerId      String?
+  staffId         String
+  paymentMethod   String   // "cash" | "mp" (mercado pago)
+  totalAmount     Decimal  @db.Decimal(10, 2)
+  servicesText    String?  // Texto libre con servicios
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  customer Customer?
+  staff    Staff
+  
+  @@map("sales")
+}
+
+// Cierres de caja diarios
+model CashClosing {
+  id            String   @id @default(cuid())
+  date          DateTime @default(now())
+  cashTotal     Decimal  @db.Decimal(10, 2) @default(0)
+  mpTotal       Decimal  @db.Decimal(10, 2) @default(0)
+  expensesTotal Decimal  @db.Decimal(10, 2) @default(0)
+  cashFinal     Decimal  @db.Decimal(10, 2) @default(0) // cashTotal - expensesTotal
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@map("cash_closings")
+}
+
+// Pagos de comisiones
+model CommissionPayment {
+  id          String   @id @default(cuid())
+  staffId     String
+  startDate   DateTime // período inicial
+  endDate     DateTime // período final
+  totalSales  Decimal  @db.Decimal(10, 2)
+  commission  Decimal  @db.Decimal(10, 2)
+  status      String   @default("pending") // "pending" | "paid"
+  paidAt      DateTime?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  staff Staff
+  
+  @@map("commission_payments")
+}

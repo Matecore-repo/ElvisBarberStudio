@@ -29,28 +29,32 @@ export function KPICard({
 }: KPICardProps) {
   const variantClasses = {
     default: {
-      bg: "bg-card/20",
-      border: "border-border",
-      accent: "text-slate-300",
-      label: "text-foreground-muted",
+      bg: "bg-neutral-900/40",
+      border: "border-neutral-800",
+      accent: "text-gray-200",
+      label: "text-gray-500",
+      hoverBorder: "hover:border-neutral-700",
     },
     accent: {
-      bg: "bg-accent/10",
-      border: "border-accent/20",
-      accent: "text-accent",
-      label: "text-foreground-muted",
+      bg: "bg-yellow-600/5",
+      border: "border-yellow-600/20",
+      accent: "text-yellow-500",
+      label: "text-gray-500",
+      hoverBorder: "hover:border-yellow-600/40",
     },
     success: {
-      bg: "bg-green-500/10",
+      bg: "bg-green-500/5",
       border: "border-green-500/20",
-      accent: "text-green-500",
-      label: "text-foreground-muted",
+      accent: "text-green-400",
+      label: "text-gray-500",
+      hoverBorder: "hover:border-green-500/40",
     },
     warning: {
-      bg: "bg-yellow-500/10",
+      bg: "bg-yellow-500/5",
       border: "border-yellow-500/20",
-      accent: "text-yellow-500",
-      label: "text-foreground-muted",
+      accent: "text-yellow-400",
+      label: "text-gray-500",
+      hoverBorder: "hover:border-yellow-500/40",
     },
   }
 
@@ -58,7 +62,7 @@ export function KPICard({
 
   return (
     <div
-      className={`p-6 border rounded-xl ${styles.bg} ${styles.border} hover:border-accent/40 transition-all cursor-pointer group min-h-[160px] flex flex-col`}
+      className={`p-6 border rounded-xl ${styles.bg} ${styles.border} ${styles.hoverBorder} transition-all cursor-pointer group min-h-[160px] flex flex-col`}
       title={tooltip}
     >
       <div className="flex items-start justify-between gap-4">

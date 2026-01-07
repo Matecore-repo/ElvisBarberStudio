@@ -1,84 +1,99 @@
-"use client"
+'use client';
 
-import { useData } from "@/contexts/DataContext"
-import { useMemo } from "react"
+import { Clock, Users, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-export function ServicesSection() {
-  const { services, loading } = useData()
+interface Service {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+}
 
-  // Agrupar servicios por nombre de categoría
-  const servicesByCategory = useMemo(() => {
-    const groups: Record<string, typeof services> = {}
+interface ServicesSectionProps {
+  services: Service[];
+}
 
-    services.forEach(service => {
-      // Usar el nombre de la categoría si existe, o "Otros" si no
-      const categoryName = service.category?.name || "Otros"
-
-      if (!groups[categoryName]) {
-        groups[categoryName] = []
-      }
-      groups[categoryName].push(service)
-    })
-
-    return groups
-  }, [services])
-
-  const categoryNames = Object.keys(servicesByCategory).sort()
+export const ServicesSection = ({ services }: ServicesSectionProps) => {
+  const serviceIcons = [
+    <Zap key="zap" className="w-6 h-6" />,
+    <Clock key="clock" className="w-6 h-6" />,
+    <Users key="users" className="w-6 h-6" />,
+  ];
 
   return (
-    <section id="servicios" className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 bg-background relative z-10">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12 sm:mb-16 md:mb-24">
-          <span className="text-accent text-xs font-bold tracking-[0.2em] uppercase">Nuestro Menú</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif mt-4 sm:mt-6 mb-6 sm:mb-8 text-white">
-            Servicios <span className="text-accent italic">&</span> Precios
+    <section id="servicios" className="relative py-20 px-4 sm:px-6 lg:px-8">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-yellow-600/5 to-transparent pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+            <span className="text-white">Nuestros</span>
+            <span className="text-yellow-500 ml-3">Servicios</span>
           </h2>
-          <div className="w-16 sm:w-24 h-[1px] bg-gradient-to-r from-transparent via-accent/50 to-transparent mx-auto" />
+          <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+            Ofrecemos una variedad de servicios premium diseñados para mantener tu estilo impecable
+          </p>
         </div>
 
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
-          </div>
-        ) : services.length === 0 ? (
-          <div className="text-center text-foreground-muted py-12">
-            <p>Servicios no disponibles momentáneamente.</p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 gap-8 sm:gap-12 md:gap-16 lg:gap-24 items-start">
-            {categoryNames.map((categoryName) => (
-              <div key={categoryName} className="space-y-6 sm:space-y-8 w-full">
-                <h3 className="text-xl sm:text-2xl font-serif border-b border-white/10 pb-3 sm:pb-4 mb-4 sm:mb-6 text-white capitalize">
-                  {categoryName}
-                </h3>
-                {servicesByCategory[categoryName].map(service => (
-                  <div key={service.id} className="group flex justify-between items-baseline w-full gap-3">
-                    <div className="relative z-10 bg-background pr-2 max-w-[70%]">
-                      <h4 className="font-bold text-base sm:text-lg group-hover:text-accent transition-colors text-white">
-                        {service.name}
-                      </h4>
-                      {service.description && (
-                        <p className="text-xs sm:text-sm text-foreground-muted mt-0.5">{service.description}</p>
-                      )}
-                    </div>
-                    <div className="flex-grow border-b border-dotted border-white/20 relative -top-1 mx-1"></div>
-                    <div className="relative z-10 bg-background pl-2 font-bold text-accent text-sm sm:text-base whitespace-nowrap">
-                      ${typeof service.price === 'number' ? service.price.toFixed(0) : service.price}
-                    </div>
+        {/* Services Grid */}
+        {services.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+            {services.map((service, idx) => (
+              <div
+                key={service.id}
+                className="group relative border border-neutral-800 rounded-xl p-6 bg-neutral-900/50 hover:border-yellow-600/50 hover:bg-neutral-900 transition-all duration-300"
+              >
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-600/0 to-yellow-600/0 group-hover:from-yellow-600/10 group-hover:to-yellow-600/5 rounded-xl transition-all duration-300 pointer-events-none" />
+
+                <div className="relative z-10">
+                  {/* Icon */}
+                  <div className="mb-4 text-yellow-500 group-hover:text-yellow-400 transition-colors">
+                    {serviceIcons[idx % serviceIcons.length]}
                   </div>
-                ))}
+
+                  {/* Name */}
+                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                    {service.name}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-gray-500 text-sm mb-4">{service.description}</p>
+
+                  {/* Price */}
+                  <div className="flex items-baseline gap-1 mb-4">
+                    <span className="text-3xl font-bold text-yellow-500">${service.price}</span>
+                  </div>
+
+                  {/* CTA Button */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full border-yellow-600/30 text-yellow-500 hover:bg-yellow-600/10 group-hover:border-yellow-500"
+                  >
+                    Agendar
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
+        ) : (
+          <div className="text-center py-12 text-gray-500">
+            <p className="text-lg">No hay servicios disponibles en este momento</p>
+          </div>
         )}
 
-        {/* CTA Button */}
-        <div className="mt-12 sm:mt-16 text-center">
-          <a href="#contacto" className="inline-block border border-white/20 px-8 sm:px-10 py-2.5 sm:py-3 text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all duration-300">
-            Ver Menú Completo
-          </a>
+        {/* Bottom CTA */}
+        <div className="text-center">
+          <p className="text-gray-400 mb-4">¿Tienes dudas sobre nuestros servicios?</p>
+          <Button className="bg-yellow-600 hover:bg-yellow-500 text-black font-semibold">
+            Contacta con nosotros
+          </Button>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};

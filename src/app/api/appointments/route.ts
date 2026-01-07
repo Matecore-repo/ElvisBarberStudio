@@ -1,102 +1,53 @@
-import { auth } from "@/auth"
-import { prisma } from "@/lib/prisma"
-import { NextRequest, NextResponse } from "next/server"
-import { Prisma, AppointmentStatus } from "@prisma/client"
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
-export async function GET(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const session = await auth()
-    if (!session?.user?.salonId) {
-      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
-    }
+    const body = await request.json();
+    const { customerName, customerPhone, staffId, service, paymentMethod } = body;
 
-    const searchParams = request.nextUrl.searchParams
-    const page = parseInt(searchParams.get("page") || "1")
-    const limit = parseInt(searchParams.get("limit") || "10")
-    const status = searchParams.get("status")
-
-    const skip = (page - 1) * limit
-    const where: Prisma.AppointmentWhereInput = {
-      salonId: session.user.salonId
-    }
-
-    if (status && status !== "all") {
-      where.status = status as AppointmentStatus
-    }
-
-    const [appointments, total] = await Promise.all([
-      prisma.appointment.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { scheduledStart: "desc" },
-        include: {
-          client: true,
-          barber: true,
+    // Crear cliente si es necesario
+    let customer = null;
+    if (customerName && customerPhone) {
+      customer = await prisma.customer.create({
+        data: {
+          name: customerName,
+          phone: customerPhone,
         },
-      }),
-      prisma.appointment.count({ where }),
-    ])
+      });
+    }
 
-    return NextResponse.json({
-      data: appointments,
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit),
+    // Crear venta/turno
+    const sale = await prisma.sale.create({
+      data: {
+        customerId: customer?.id,
+        staffId,
+        paymentMethod: paymentMethod || 'CASH',
+        totalAmount: 0,
+        servicesText: service,
       },
-    })
+    });
+
+    return NextResponse.json(sale, { status: 201 });
   } catch (error) {
-    console.error("Error fetching appointments:", error)
-    return NextResponse.json(
-      { error: "Error al obtener turnos" },
-      { status: 500 }
-    )
+    console.error('Error creating appointment:', error);
+    return NextResponse.json({ error: 'Error creating appointment' }, { status: 500 });
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function GET() {
   try {
-    const session = await auth()
-    if (!session) {
-      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
-    }
-
-    const data = await request.json()
-    const { clientId, barberId, serviceId, date, status, durationMinutes } = data
-
-    if (!clientId || !barberId || !date) {
-      return NextResponse.json(
-        { error: "Datos requeridos faltantes" },
-        { status: 400 }
-      )
-    }
-
-    const duration = durationMinutes || 30
-
-    const appointment = await prisma.appointment.create({
-      data: {
-        salonId: session.user.salonId as string,
-        clientId,
-        barberId,
-        serviceId: serviceId || null,
-        scheduledStart: new Date(date),
-        scheduledEnd: new Date(new Date(date).getTime() + duration * 60000),
-        status: status || "SCHEDULED",
-      },
+    const sales = await prisma.sale.findMany({
       include: {
-        client: true,
-        barber: true,
+        customer: true,
+        staff: true,
       },
-    })
-
-    return NextResponse.json(appointment, { status: 201 })
+      orderBy: {
+        dateTime: 'desc',
+      },
+    });
+    return NextResponse.json(sales);
   } catch (error) {
-    console.error("Error creating appointment:", error)
-    return NextResponse.json(
-      { error: "Error al crear turno" },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Error fetching appointments' }, { status: 500 });
   }
 }

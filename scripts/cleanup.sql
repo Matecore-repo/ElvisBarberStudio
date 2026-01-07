@@ -1,0 +1,26 @@
+-- Script para limpiar completamente el esquema public
+
+-- Eliminar todas las tablas existentes
+DROP TABLE IF EXISTS commissions CASCADE;
+DROP TABLE IF EXISTS appointments CASCADE;
+DROP TABLE IF EXISTS services CASCADE;
+DROP TABLE IF EXISTS service_categories CASCADE;
+DROP TABLE IF EXISTS clients CASCADE;
+DROP TABLE IF EXISTS barbers CASCADE;
+DROP TABLE IF EXISTS salons CASCADE;
+DROP TABLE IF EXISTS accounts CASCADE;
+DROP TABLE IF EXISTS sessions CASCADE;
+DROP TABLE IF EXISTS verification_tokens CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS commission_payments CASCADE;
+DROP TABLE IF EXISTS cash_closings CASCADE;
+DROP TABLE IF EXISTS sales CASCADE;
+DROP TABLE IF EXISTS customers CASCADE;
+DROP TABLE IF EXISTS staff CASCADE;
+
+-- Eliminar tipos enum si existen
+DROP TYPE IF EXISTS CommissionStatus CASCADE;
+DROP TYPE IF EXISTS PaymentMethod CASCADE;
+DROP TYPE IF EXISTS UserRole CASCADE;
+DROP TYPE IF EXISTS CommissionType CASCADE;
+DROP TYPE IF EXISTS AppointmentStatus CASCADE;

@@ -14,7 +14,7 @@ export function TopNav({ user, onOpenMenu }: TopNavProps) {
     currentHour < 12 ? "Buenos días" : currentHour < 18 ? "Buenas tardes" : "Buenas noches"
 
   return (
-    <header className="fixed top-0 left-0 right-0 md:left-64 h-20 bg-background/85 backdrop-blur-md border-b border-border z-40">
+    <header className="fixed top-0 left-0 right-0 md:left-64 h-20 bg-black/80 backdrop-blur-lg border-b border-neutral-800 z-40">
       <div className="h-full px-4 sm:px-6 flex items-center justify-between gap-4">
         {/* Left Section - Menu + Greeting */}
         <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
@@ -22,7 +22,7 @@ export function TopNav({ user, onOpenMenu }: TopNavProps) {
           <button
             type="button"
             onClick={onOpenMenu}
-            className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg hover:bg-card/40 transition-colors flex-shrink-0 text-foreground"
+            className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg hover:bg-neutral-800 transition-colors flex-shrink-0 text-white"
             aria-label="Abrir menú"
             title="Abrir menú"
           >
@@ -43,7 +43,7 @@ export function TopNav({ user, onOpenMenu }: TopNavProps) {
 
           {/* Greeting */}
           <div className="min-w-0">
-            <p className="text-xs uppercase tracking-widest text-foreground-muted font-medium">
+            <p className="text-xs uppercase tracking-widest text-gray-500 font-medium">
               {greeting}
             </p>
             <h1 className="text-base sm:text-lg font-semibold text-white truncate">
@@ -54,10 +54,10 @@ export function TopNav({ user, onOpenMenu }: TopNavProps) {
 
         {/* Right Section - Status Badge */}
         <div className="flex items-center gap-2 flex-shrink-0">
-          {/* System Status Badge */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-success/10 border border-success/20">
-            <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-            <span className="text-xs text-success font-medium">Activo</span>
+          {/* System Status Badge - Dorado */}
+          <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-lg bg-yellow-600/10 border border-yellow-600/30 hover:border-yellow-600/50 transition-all">
+            <div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" />
+            <span className="text-xs text-yellow-500 font-medium">Activo</span>
           </div>
         </div>
       </div>

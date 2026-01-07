@@ -15,13 +15,10 @@ interface StatsCardProps {
 }
 
 const variantStyles = {
-  default: "border-border/50 bg-card/20 hover:border-foreground-muted/30 hover:bg-card/30",
-  accent:
-    "border-accent/20 bg-accent/5 hover:border-accent/40 hover:bg-accent/10",
-  success:
-    "border-success/20 bg-success/5 hover:border-success/40 hover:bg-success/10",
-  warning:
-    "border-warning/20 bg-warning/5 hover:border-warning/40 hover:bg-warning/10",
+  default: "border-neutral-800 bg-neutral-900/40 hover:border-neutral-700 hover:bg-neutral-900/60",
+  accent: "border-yellow-600/20 bg-yellow-600/5 hover:border-yellow-600/40 hover:bg-yellow-600/10",
+  success: "border-green-500/20 bg-green-500/5 hover:border-green-500/40 hover:bg-green-500/10",
+  warning: "border-yellow-500/20 bg-yellow-500/5 hover:border-yellow-500/40 hover:bg-yellow-500/10",
 }
 
 export function StatsCard({
@@ -42,14 +39,14 @@ export function StatsCard({
       <div className="flex items-start justify-between gap-4">
         {/* Left Content */}
         <div className="flex-1 min-w-0">
-          <p className="text-xs sm:text-sm uppercase tracking-wider text-foreground-muted font-semibold mb-2 sm:mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-wider text-gray-500 font-semibold mb-2 sm:mb-3">
             {label}
           </p>
           <p className="text-2xl sm:text-3xl font-bold text-white mb-1 leading-tight">
             {value}
           </p>
           {sublabel && (
-            <p className="text-xs sm:text-sm text-foreground-muted">{sublabel}</p>
+            <p className="text-xs sm:text-sm text-gray-500">{sublabel}</p>
           )}
         </div>
       </div>
@@ -59,12 +56,12 @@ export function StatsCard({
         <div className="mt-3 sm:mt-4 flex items-center gap-1.5">
           <span
             className={`text-xs sm:text-sm font-semibold ${
-              trend.direction === "up" ? "text-success" : "text-warning"
+              trend.direction === "up" ? "text-green-400" : "text-red-400"
             }`}
           >
             {trend.direction === "up" ? "↑" : "↓"} {Math.abs(trend.value)}%
           </span>
-          <span className="text-xs text-foreground-muted">vs mes anterior</span>
+          <span className="text-xs text-gray-500">vs mes anterior</span>
         </div>
       )}
     </button>

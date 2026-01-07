@@ -1,0 +1,219 @@
+════════════════════════════════════════════════════════════════════════════════
+         ELVIS BARBER STUDIO - CREDENCIALES DE ACCESO
+════════════════════════════════════════════════════════════════════════════════
+
+⚠️ ARCHIVO CONFIDENCIAL - NO COMPARTIR ⚠️
+
+Fecha de Creación: 07/01/2026
+Estado: Activo
+Versión: 1.0
+
+
+════════════════════════════════════════════════════════════════════════════════
+1️⃣ ADMINISTRADOR (Acceso Total)
+════════════════════════════════════════════════════════════════════════════════
+
+👤 Usuario Admin (Gerente)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Email:       admin@barber.com
+Contraseña:  admin123
+Rol:         ADMIN
+Nombre:      Administrador
+Acceso:      ✅ Todo el sistema
+             ✅ Ver dashboard completo
+             ✅ Gestionar turnos (crear, editar, borrar, leer)
+             ✅ Gestionar comisiones
+             ✅ Gestionar caja
+             ✅ Ver barberos
+             ✅ Reportes y estadísticas
+
+🔐 CAMBIAR CONTRASEÑA EN PRIMER ACCESO ⚠️
+
+
+════════════════════════════════════════════════════════════════════════════════
+2️⃣ PROPIETARIO (Acceso Total)
+════════════════════════════════════════════════════════════════════════════════
+
+👨‍💼 Propietario (Elvis)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Email:       elvis@barber.com
+Contraseña:  elvis123
+Rol:         OWNER
+Nombre:      Elvis
+Acceso:      ✅ Todo el sistema
+             ✅ Ver dashboard completo
+             ✅ Gestionar turnos (crear, editar, borrar, leer)
+             ✅ Gestionar comisiones
+             ✅ Gestionar caja
+             ✅ Ver barberos
+             ✅ Reportes y estadísticas
+
+🔐 CAMBIAR CONTRASEÑA EN PRIMER ACCESO ⚠️
+
+
+════════════════════════════════════════════════════════════════════════════════
+3️⃣ BARBEROS (Acceso Limitado)
+════════════════════════════════════════════════════════════════════════════════
+
+💈 Barbero #1
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Email:       carlos@barber.com
+Contraseña:  carlos123
+Rol:         BARBER
+Nombre:      Carlos
+Comisión:    40%
+Acceso:      ✅ Ver mis turnos asignados
+             ✅ Crear nuevos turnos
+             ✅ Editar mis turnos
+             ✅ Borrar mis turnos
+             ❌ Ver comisiones
+             ❌ Ver caja
+             ❌ Ver turnos de otros barberos
+
+🔐 CAMBIAR CONTRASEÑA EN PRIMER ACCESO ⚠️
+
+
+💈 Barbero #2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Email:       juan@barber.com
+Contraseña:  juan123
+Rol:         BARBER
+Nombre:      Juan
+Comisión:    35%
+Acceso:      ✅ Ver mis turnos asignados
+             ✅ Crear nuevos turnos
+             ✅ Editar mis turnos
+             ✅ Borrar mis turnos
+             ❌ Ver comisiones
+             ❌ Ver caja
+             ❌ Ver turnos de otros barberos
+
+🔐 CAMBIAR CONTRASEÑA EN PRIMER ACCESO ⚠️
+
+
+💈 Barbero #3
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Email:       miguel@barber.com
+Contraseña:  miguel123
+Rol:         BARBER
+Nombre:      Miguel
+Comisión:    40%
+Acceso:      ✅ Ver mis turnos asignados
+             ✅ Crear nuevos turnos
+             ✅ Editar mis turnos
+             ✅ Borrar mis turnos
+             ❌ Ver comisiones
+             ❌ Ver caja
+             ❌ Ver turnos de otros barberos
+
+🔐 CAMBIAR CONTRASEÑA EN PRIMER ACCESO ⚠️
+
+
+════════════════════════════════════════════════════════════════════════════════
+📋 MATRIZ DE PERMISOS POR ROL
+════════════════════════════════════════════════════════════════════════════════
+
+Funcionalidad              │  ADMIN  │  OWNER  │  BARBER
+─────────────────────────────────────────────────────────────────────────
+Ver todos los turnos       │   ✅    │   ✅    │   ❌
+Ver mis turnos             │   ✅    │   ✅    │   ✅
+Crear turnos               │   ✅    │   ✅    │   ✅
+Editar turnos              │   ✅    │   ✅    │   ✅
+Borrar turnos              │   ✅    │   ✅    │   ✅
+Ver comisiones             │   ✅    │   ✅    │   ❌
+Crear comisiones           │   ✅    │   ✅    │   ❌
+Pagar comisiones           │   ✅    │   ✅    │   ❌
+Ver caja                   │   ✅    │   ✅    │   ❌
+Crear cierre de caja       │   ✅    │   ✅    │   ❌
+Ver barberos               │   ✅    │   ✅    │   ❌
+Gestionar barberos         │   ✅    │   ✅    │   ❌
+Ver reportes               │   ✅    │   ✅    │   ❌
+Exportar datos             │   ✅    │   ✅    │   ❌
+
+
+════════════════════════════════════════════════════════════════════════════════
+🔐 POLÍTICAS DE SEGURIDAD
+════════════════════════════════════════════════════════════════════════════════
+
+1. CAMBIO DE CONTRASEÑA OBLIGATORIO
+   - Cambiar contraseña en el primer acceso
+   - Mínimo 8 caracteres
+   - Incluir mayúsculas, minúsculas, números y símbolos
+
+2. SESIÓN
+   - Duración: 24 horas
+   - Cierre automático por inactividad: 30 minutos
+   - Logout al cambiar contraseña
+
+3. PRIVACIDAD
+   - Cada barbero solo ve sus propios turnos
+   - Admin y Owner ven todo el sistema
+   - Logs de auditoría de todas las acciones
+
+4. DATOS SENSIBLES
+   - Nunca compartir credenciales por email o chat
+   - Usar canales seguros
+   - Cambiar contraseñas regularmente
+
+5. RECUPERACIÓN DE CUENTA
+   - Correo de recuperación a email registrado
+   - Link válido por 24 horas
+   - Confirmación de identidad requerida
+
+
+════════════════════════════════════════════════════════════════════════════════
+🌐 URLs DE ACCESO
+════════════════════════════════════════════════════════════════════════════════
+
+Ambiente:     PRODUCCIÓN
+URL Base:     https://elvis-barber-studio.vercel.app
+Login:        https://elvis-barber-studio.vercel.app/auth/signin
+Landing:      https://elvis-barber-studio.vercel.app
+Dashboard:    https://elvis-barber-studio.vercel.app/dashboard
+
+Ambiente:     DESARROLLO
+URL Base:     http://localhost:3000
+Login:        http://localhost:3000/auth/signin
+Landing:      http://localhost:3000
+Dashboard:    http://localhost:3000/dashboard
+
+
+════════════════════════════════════════════════════════════════════════════════
+📞 CONTACTO Y SOPORTE
+════════════════════════════════════════════════════════════════════════════════
+
+Email de Soporte:    admin@elvisbarber.com
+Teléfono:            +54 11 XXXX-XXXX
+Horario:             Lunes a Viernes, 10:00 - 18:00 (ART)
+WhatsApp:            +54 9 11 XXXX-XXXX
+
+
+════════════════════════════════════════════════════════════════════════════════
+📝 REGISTRO DE CAMBIOS
+════════════════════════════════════════════════════════════════════════════════
+
+Fecha          │ Cambio                                    │ Usuario
+───────────────┼───────────────────────────────────────────┼─────────
+07/01/2026     │ Creación inicial de credenciales          │ Admin
+               │                                           │
+               │                                           │
+
+
+════════════════════════════════════════════════════════════════════════════════
+⚠️ NOTAS IMPORTANTES
+════════════════════════════════════════════════════════════════════════════════
+
+1. Este archivo debe guardarse en un lugar seguro
+2. No commitear a Git (incluir en .gitignore)
+3. Cambiar todas las contraseñas en primer acceso
+4. Hacer backup de este archivo
+5. Revisar accesos regularmente
+6. Reportar intentos de acceso no autorizados
+7. Desactivar cuentas de barberos que se vayan
+8. Los datos aquí son solo para demostración
+
+
+════════════════════════════════════════════════════════════════════════════════
+                        DOCUMENTO CONFIDENCIAL
+                     ¡Guardar en lugar seguro!
+════════════════════════════════════════════════════════════════════════════════

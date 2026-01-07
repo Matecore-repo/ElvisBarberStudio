@@ -10,13 +10,12 @@ datasource db {
 }
 
 model User {
-  id           String @id @default(cuid())
-  email        String @unique
-  name         String?
-  passwordHash String?
-  role         String @default("barber") // admin, owner, barber
-  staffId      String?
-
+  id       String @id @default(cuid())
+  email    String @unique
+  name     String?
+  password String?
+  role     String @default("admin")
+  
   @@map("users")
 }
 
@@ -25,9 +24,9 @@ model Customer {
   name      String
   phone     String?
   createdAt DateTime @default(now()) @map("created_at")
-
+  
   sales Sale[]
-
+  
   @@map("customers")
 }
 
@@ -37,27 +36,27 @@ model Staff {
   commissionRateDefault  Float   @default(0.4) @map("commission_rate_default")
   active                 Boolean @default(true)
   createdAt              DateTime @default(now()) @map("created_at")
-
+  
   sales              Sale[]
   commissionPayments CommissionPayment[]
-
+  
   @@map("staff")
 }
 
 model Sale {
-  id             String   @id @default(cuid())
-  dateTime       DateTime @default(now()) @map("date_time")
-  customerId     String?  @map("customer_id")
-  staffId        String   @map("staff_id")
-  paymentMethod  String   @map("payment_method")
-  totalAmount    Decimal  @map("total_amount") @db.Decimal(10, 2)
-  servicesText   String   @map("services_text")
+  id             String        @id @default(cuid())
+  dateTime       DateTime      @default(now()) @map("date_time")
+  customerId     String?       @map("customer_id")
+  staffId        String        @map("staff_id")
+  paymentMethod  PaymentMethod @map("payment_method")
+  totalAmount    Decimal       @map("total_amount") @db.Decimal(10, 2)
+  servicesText   String        @map("services_text")
   notes          String?
-  createdAt      DateTime @default(now()) @map("created_at")
-
+  createdAt      DateTime      @default(now()) @map("created_at")
+  
   customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
   staff    Staff     @relation(fields: [staffId], references: [id], onDelete: Cascade)
-
+  
   @@map("sales")
 }
 
@@ -71,7 +70,7 @@ model CashClosing {
   notes          String?
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
-
+  
   @@map("cash_closings")
 }
 
@@ -83,13 +82,22 @@ model CommissionPayment {
   totalSales  Decimal  @map("total_sales") @db.Decimal(10, 2)
   commissionRate Float @map("commission_rate")
   commissionAmount Decimal @map("commission_amount") @db.Decimal(10, 2)
-  status      String   @default("PENDING")
+  status      CommissionStatus @default(PENDING)
   paidAt      DateTime? @map("paid_at")
   notes       String?
   createdAt   DateTime @default(now()) @map("created_at")
-
+  
   staff Staff @relation(fields: [staffId], references: [id], onDelete: Cascade)
-
+  
   @@map("commission_payments")
 }
 
+enum PaymentMethod {
+  CASH
+  MP
+}
+
+enum CommissionStatus {
+  PENDING
+  PAID
+}
