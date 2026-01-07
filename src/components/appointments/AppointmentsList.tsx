@@ -19,6 +19,8 @@ type AppointmentWithRelations = AppointmentSerialized & {
   barber: Barber | null
 }
 
+type AppointmentKey = keyof AppointmentWithRelations | 'client' | 'service' | 'barber'
+
 interface BarberSerialized extends Omit<Barber, 'commissionValue'> {
   commissionValue: number
 }
@@ -28,7 +30,6 @@ interface AppointmentsListProps {
   barbers: BarberSerialized[]
 }
 
-type AppointmentStatus = "SCHEDULED" | "COMPLETED" | "CANCELED"
 
 export function AppointmentsList({ initialAppointments, barbers }: AppointmentsListProps) {
   const [appointments, setAppointments] = useState(initialAppointments)
@@ -121,16 +122,18 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
     }
   }
 
-  const formatDate = (date: Date | string) => {
-    return new Date(date).toLocaleDateString("es-AR", {
+  const formatDate = (date: Date | null) => {
+    if (!date) return "-"
+    return date.toLocaleDateString("es-AR", {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
     })
   }
 
-  const formatTime = (date: Date | string) => {
-    return new Date(date).toLocaleTimeString("es-AR", {
+  const formatTime = (date: Date | null) => {
+    if (!date) return "-"
+    return date.toLocaleTimeString("es-AR", {
       hour: "2-digit",
       minute: "2-digit",
     })
@@ -158,40 +161,40 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
       <DataTable
         columns={[
           {
-            key: "client" as any,
+            key: "client" as AppointmentKey,
             label: "Cliente",
             searchable: true,
             sortable: true,
             render: (_, apt: AppointmentWithRelations) => apt.client?.name || "Sin cliente",
           },
           {
-            key: "service" as any,
+            key: "service" as AppointmentKey,
             label: "Servicio",
             searchable: true,
             sortable: true,
             render: (_, apt: AppointmentWithRelations) => apt.service?.name || "Sin servicio",
           },
           {
-            key: "barber" as any,
+            key: "barber" as AppointmentKey,
             label: "Peluquero",
             searchable: true,
             sortable: true,
             render: (_, apt: AppointmentWithRelations) => apt.barber?.name || "Sin asignar",
           },
           {
-            key: "scheduledStart" as any,
+            key: "scheduledStart" as AppointmentKey,
             label: "Fecha",
             sortable: true,
-            render: (value) => formatDate(value),
+            render: (_, apt: AppointmentWithRelations) => formatDate(apt.scheduledStart),
           },
           {
-            key: "scheduledStart" as any,
+            key: "scheduledStart" as AppointmentKey,
             label: "Hora",
             align: "center",
-            render: (value) => formatTime(value),
+            render: (_, apt: AppointmentWithRelations) => formatTime(apt.scheduledStart),
           },
           {
-            key: "status" as any,
+            key: "status" as AppointmentKey,
             label: "Estado",
             align: "center",
             render: (value) => (
@@ -209,7 +212,7 @@ export function AppointmentsList({ initialAppointments, barbers }: AppointmentsL
             ),
           },
           {
-            key: "id" as any,
+            key: "id" as AppointmentKey,
             label: "Acción",
             align: "center",
             render: (_, apt: AppointmentWithRelations) =>

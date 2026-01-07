@@ -18,6 +18,11 @@ interface Service {
   categoryId: string | null
   price: number | string
   durationMinutes: number
+}
+
+type ServiceKey = keyof Service
+
+interface ExtendedService extends Service {
   salonId: string
   createdAt: string
   updatedAt: string
@@ -25,7 +30,7 @@ interface Service {
 }
 
 export function ServicesList({ salonId }: { salonId: string }) {
-  const [services, setServices] = useState<Service[]>([])
+  const [services, setServices] = useState<ExtendedService[]>([])
   const [categories, setCategories] = useState<ServiceCategory[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -450,29 +455,29 @@ export function ServicesList({ salonId }: { salonId: string }) {
                 <DataTable
                   columns={[
                     {
-                      key: "name" as const,
+                      key: "name" as ServiceKey,
                       label: "Nombre",
                       searchable: true,
                       sortable: true,
-                      render: (value: any) => <span className="font-medium text-white">{String(value)}</span>
+                      render: (value: unknown) => <span className="font-medium text-white">{String(value)}</span>
                     },
                     {
-                      key: "durationMinutes" as const,
+                      key: "durationMinutes" as ServiceKey,
                       label: "Duración",
                       align: "center",
-                      render: (value: any) => <span className="text-xs text-foreground-muted">{value} min</span>,
+                      render: (value: unknown) => <span className="text-xs text-foreground-muted">{String(value)} min</span>,
                     },
                     {
-                      key: "price" as const,
+                      key: "price" as ServiceKey,
                       label: "Precio",
                       align: "right",
-                      render: (value: any) => <span className="text-accent font-mono">${parseFloat(String(value)).toFixed(2)}</span>,
+                      render: (value: unknown) => <span className="text-accent font-mono">${parseFloat(String(value)).toFixed(2)}</span>,
                     },
                     {
-                      key: "id" as const,
+                      key: "id" as ServiceKey,
                       label: "Acciones",
                       align: "right",
-                      render: (_, service: Service) => (
+                      render: (_, service: ExtendedService) => (
                         <div className="flex gap-2 justify-end">
                           <button
                             onClick={() => handleEditService(service)}
@@ -511,26 +516,26 @@ export function ServicesList({ salonId }: { salonId: string }) {
                   <DataTable
                     columns={[
                       {
-                        key: "name" as const,
+                        key: "name" as ServiceKey,
                         label: "Nombre",
                         searchable: true,
                         sortable: true,
-                        render: (value: any) => <span className="font-medium text-white">{String(value)}</span>
+                        render: (value: unknown) => <span className="font-medium text-white">{String(value)}</span>
                       },
                       {
-                        key: "durationMinutes" as const,
+                        key: "durationMinutes" as ServiceKey,
                         label: "Duración",
                         align: "center",
-                        render: (value: any) => <span className="text-xs text-foreground-muted">{value} min</span>,
+                        render: (value: unknown) => <span className="text-xs text-foreground-muted">{String(value)} min</span>,
                       },
                       {
-                        key: "price" as const,
+                        key: "price" as ServiceKey,
                         label: "Precio",
                         align: "right",
-                        render: (value: any) => <span className="text-accent font-mono">${parseFloat(String(value)).toFixed(2)}</span>,
+                        render: (value: unknown) => <span className="text-accent font-mono">${parseFloat(String(value)).toFixed(2)}</span>,
                       },
                       {
-                        key: "id" as const,
+                        key: "id" as ServiceKey,
                         label: "Acciones",
                         align: "right",
                         render: (_, service: Service) => (

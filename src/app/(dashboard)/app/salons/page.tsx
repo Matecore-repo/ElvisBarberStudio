@@ -13,6 +13,8 @@ interface Salon {
   updatedAt: string
 }
 
+type SalonKey = keyof Salon
+
 export default function SalonsPage() {
   const [salons, setSalons] = useState<Salon[]>([])
   const [loading, setLoading] = useState(true)
@@ -229,35 +231,35 @@ export default function SalonsPage() {
       <DataTable
         columns={[
           {
-            key: "name" as any,
+            key: "name" as SalonKey,
             label: "Nombre",
             searchable: true,
             sortable: true,
           },
           {
-            key: "address" as any,
+            key: "address" as SalonKey,
             label: "Dirección",
             searchable: true,
             sortable: true,
           },
           {
-            key: "phone" as any,
+            key: "phone" as SalonKey,
             label: "Teléfono",
             searchable: true,
           },
           {
-            key: "createdAt" as any,
+            key: "createdAt" as SalonKey,
             label: "Fecha de creación",
             sortable: true,
-            render: (value) =>
-              value ? new Date(value).toLocaleDateString("es-AR", {
+            render: (_, salon: Salon) =>
+              salon.createdAt ? new Date(salon.createdAt).toLocaleDateString("es-AR", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
               }) : "-",
           },
           {
-            key: "id" as any,
+            key: "id" as SalonKey,
             label: "Acciones",
             align: "center",
             render: (_, salon: Salon) => (

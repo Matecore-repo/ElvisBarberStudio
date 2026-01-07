@@ -9,6 +9,8 @@ interface ClientsComponentProps {
   initialClients: Client[]
 }
 
+type ClientKey = keyof Client
+
 export default function ClientsComponent({ initialClients }: ClientsComponentProps) {
   const [clients, setClients] = useState<Client[]>(initialClients)
   const [showForm, setShowForm] = useState(false)
@@ -96,7 +98,7 @@ export default function ClientsComponent({ initialClients }: ClientsComponentPro
     }
   }
 
-  const filters: any[] = []
+  const filters: never[] = []
 
   return (
     <div className="space-y-8">
@@ -191,25 +193,25 @@ export default function ClientsComponent({ initialClients }: ClientsComponentPro
       <DataTable
         columns={[
           {
-            key: "name" as any,
+            key: "name" as ClientKey,
             label: "Nombre",
             searchable: true,
             sortable: true,
           },
           {
-            key: "phone" as any,
+            key: "phone" as ClientKey,
             label: "Teléfono",
             searchable: true,
             sortable: true,
           },
           {
-            key: "notes" as any,
+            key: "notes" as ClientKey,
             label: "Notas",
             searchable: true,
             render: (value) => (value ? String(value).substring(0, 50) : "-"),
           },
           {
-            key: "createdAt" as any,
+            key: "createdAt" as ClientKey,
             label: "Fecha de registro",
             sortable: true,
             render: (value) =>
@@ -220,7 +222,7 @@ export default function ClientsComponent({ initialClients }: ClientsComponentPro
               }) : "-",
           },
           {
-            key: "id" as any,
+            key: "id" as ClientKey,
             label: "Acciones",
             align: "center",
             render: (_, client: Client) => (

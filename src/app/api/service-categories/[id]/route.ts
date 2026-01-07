@@ -16,7 +16,7 @@ export async function PUT(
     const data = await request.json()
     const { name } = data
 
-    const category = await (prisma as any).serviceCategory.update({
+    const category = await prisma.serviceCategory.update({
       where: { id },
       data: { name },
     })
@@ -43,7 +43,7 @@ export async function DELETE(
 
     const { id } = await params
 
-    await (prisma as any).serviceCategory.delete({
+    await prisma.serviceCategory.delete({
       where: { id },
     })
 

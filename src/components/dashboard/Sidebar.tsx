@@ -106,7 +106,7 @@ export function Sidebar({ user, className, showClose, onClose, onNavigate }: Sid
             <Link
               key={item.href}
               href={item.href}
-              onClick={(e) => {
+              onClick={() => {
                 if (onNavigate) onNavigate()
               }}
               className={`group flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200 relative overflow-hidden ${isActive

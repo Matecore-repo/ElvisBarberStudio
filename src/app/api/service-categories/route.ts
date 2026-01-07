@@ -1,4 +1,3 @@
-import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
 import { Prisma } from "@prisma/client"
@@ -14,7 +13,7 @@ export async function GET(request: NextRequest) {
       where.name = { contains: search, mode: "insensitive" }
     }
 
-    const categories = await (prisma as any).serviceCategory.findMany({
+    const categories = await prisma.serviceCategory.findMany({
       where,
       orderBy: { createdAt: "desc" },
     })
@@ -41,7 +40,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const category = await (prisma as any).serviceCategory.create({
+    const category = await prisma.serviceCategory.create({
       data: {
         salonId,
         name,
