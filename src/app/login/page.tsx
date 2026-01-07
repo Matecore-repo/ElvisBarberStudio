@@ -42,10 +42,10 @@ export default function LoginPage() {
     <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 relative overflow-hidden" suppressHydrationWarning>
       {/* Fondo oscuro con ligero dorado */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-neutral-950 to-black pointer-events-none" />
-      
+
       {/* Orbes dorados muy sutiles (máximo 10% del espacio) */}
-      <div className="absolute -top-40 -left-40 w-80 h-80 bg-yellow-600 rounded-full blur-3xl opacity-5 animate-pulse" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-yellow-700 rounded-full blur-3xl opacity-4 animate-pulse" style={{ animationDelay: '2s' }} />
+      <div className="absolute -top-40 -left-40 w-80 h-80 bg-yellow-600 rounded-full blur-3xl opacity-5 animate-pulse pointer-events-none" />
+      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-yellow-700 rounded-full blur-3xl opacity-4 animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
 
       <div className="w-full max-w-md z-10">
         {/* Header */}
@@ -65,7 +65,7 @@ export default function LoginPage() {
         <div className="relative border border-neutral-800 rounded-2xl p-8 bg-neutral-950 backdrop-blur-sm overflow-hidden group">
           {/* Borde dorado sutil en hover */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-600 to-transparent opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none" />
-          
+
           {/* Contenido */}
           <div className="relative z-10">
             <form onSubmit={handleSubmit} className="space-y-6">
