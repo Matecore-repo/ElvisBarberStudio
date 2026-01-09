@@ -31,10 +31,11 @@ export default auth((req) => {
         )
     }
 
-    // Si está logueado e intenta ir a login, redirigir a /app
-    if (pathname === "/login" && isLoggedIn) {
-        return NextResponse.redirect(new URL("/app", req.url))
-    }
+    // Si está logueado e intenta ir a login, NO redirigimos automáticamente
+    // Permitimos que la página de login maneje la UI de "Ya hay una cuenta"
+    // if (pathname === "/login" && isLoggedIn) {
+    //     return NextResponse.redirect(new URL("/app", req.url))
+    // }
 
     return NextResponse.next()
 })

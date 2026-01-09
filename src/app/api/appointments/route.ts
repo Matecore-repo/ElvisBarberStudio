@@ -4,27 +4,35 @@ import { prisma } from '@/lib/prisma';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { customerName, customerPhone, staffId, service, paymentMethod } = body;
+    const { customerName, customerPhone, staffId, service, paymentMethod, clientId } = body;
 
     // Crear cliente si es necesario
-    let customer = null;
-    if (customerName && customerPhone) {
-      customer = await prisma.customer.create({
+    let customerIdToUse = clientId;
+
+    if (!customerIdToUse && customerName && customerPhone) {
+      const customer = await prisma.customer.create({
         data: {
           name: customerName,
           phone: customerPhone,
         },
       });
+      customerIdToUse = customer.id;
     }
 
     // Crear venta/turno
     const sale = await prisma.sale.create({
       data: {
-        customerId: customer?.id,
+        customerId: customerIdToUse,
         staffId,
-        paymentMethod: paymentMethod || 'CASH',
+        paymentMethod: null, // Es un turno, no pagado aún
         totalAmount: 0,
-        servicesText: service,
+        servicesText: service || 'Turno', // Fallback
+        // Guardar fecha y hora separados
+        date: new Date(body.date), // YYYY-MM-DD
+        time: body.time,           // HH:mm
+        // Mantener dateTime sincronizado para ordenamiento
+        dateTime: new Date(`${body.date}T${body.time}:00`),
+        status: 'SCHEDULED',
       },
     });
 

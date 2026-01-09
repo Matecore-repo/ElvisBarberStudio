@@ -46,10 +46,13 @@ model Staff {
 
 model Sale {
   id             String   @id @default(cuid())
-  dateTime       DateTime @default(now()) @map("date_time")
+  dateTime       DateTime @default(now()) @map("date_time") // Mantener por compatibilidad, pero usar date/time
+  date           DateTime? @db.Date // Fecha del turno (sin hora)
+  time           String?  // Hora del turno (HH:mm)
+  status         String   @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELED
   customerId     String?  @map("customer_id")
   staffId        String   @map("staff_id")
-  paymentMethod  String   @map("payment_method")
+  paymentMethod  String?  @map("payment_method") // Puede ser null si es turno futuro
   totalAmount    Decimal  @map("total_amount") @db.Decimal(10, 2)
   servicesText   String   @map("services_text")
   notes          String?

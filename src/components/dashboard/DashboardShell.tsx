@@ -35,10 +35,13 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
   }, [sidebarOpen])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-black">
-      {/* Degradado atmosférico: gris muy oscuro a negro sin azules */}
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(30,_30,_30,_0.15)_0%,_rgba(0,_0,_0,_0)_70%)] pointer-events-none" />
-      
+    <div className="min-h-screen bg-[#000000] text-neutral-200">
+      {/* Background patterns - Vercel style subtle grid - Consistent with Login */}
+      <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+
+      {/* Subtle 10% Gold Glow - Top Center fixed */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-yellow-500/05 blur-[100px] rounded-full pointer-events-none" />
+
       <Sidebar user={user} className="hidden md:flex" />
 
       {sidebarOpen && (

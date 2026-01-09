@@ -20,6 +20,7 @@ export default async function AppointmentsPage() {
     paymentMethod: sale.paymentMethod,
     totalAmount: sale.totalAmount ? parseFloat(sale.totalAmount.toString()) : null,
     servicesText: sale.servicesText,
+    status: sale.status, // Add status
   }));
 
   return (

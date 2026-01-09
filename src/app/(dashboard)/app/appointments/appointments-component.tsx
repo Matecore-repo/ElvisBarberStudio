@@ -1,43 +1,51 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { Appointment, Client, Service, Barber } from "@prisma/client"
+import { Sale, Customer, Staff } from "@prisma/client"
 import { Plus, X } from "lucide-react"
 import { DataTable } from "@/components/dashboard/DataTable"
+
+// Definir interfaz manual ya que Service no está en el esquema actual
+interface Service {
+    id: string
+    name: string
+    price: number
+    description?: string
+}
 
 interface ServiceSerialized extends Omit<Service, 'price'> {
     price: number
 }
 
-interface AppointmentSerialized extends Omit<Appointment, 'totalAmount'> {
+interface SaleSerialized extends Omit<Sale, 'totalAmount'> {
     totalAmount: number | null
 }
 
-type AppointmentWithRelations = AppointmentSerialized & {
-    client: Client | null
+type SaleWithRelations = SaleSerialized & {
+    client: Customer | null
     service: ServiceSerialized | null
-    barber: Barber | null
+    barber: Staff | null
 }
 
-interface BarberSerialized extends Omit<Barber, 'commissionValue'> {
+interface StaffSerialized extends Omit<Staff, 'commissionValue'> {
     commissionValue: number
 }
 
-interface AppointmentsComponentProps {
-    initialAppointments: AppointmentWithRelations[]
-    barbers: BarberSerialized[]
-    clients: Client[]
+interface SalesComponentProps {
+    initialSales: SaleWithRelations[]
+    barbers: StaffSerialized[]
+    clients: Customer[]
     services: ServiceSerialized[]
 }
 
 // Type is used in status values but type inference handles it
 
-export function AppointmentsComponent({ initialAppointments, barbers, clients, services }: AppointmentsComponentProps) {
-    const [appointments, setAppointments] = useState(initialAppointments)
+export function SalesComponent({ initialSales, barbers, clients, services }: SalesComponentProps) {
+    const [appointments, setSales] = useState(initialSales)
     const [showCompleteModal, setShowCompleteModal] = useState(false)
     const [showNewModal, setShowNewModal] = useState(false)
-    const [selectedAppointment, setSelectedAppointment] = useState<AppointmentWithRelations | null>(null)
-    const [selectedBarberId, setSelectedBarberId] = useState("")
+    const [selectedSale, setSelectedSale] = useState<SaleWithRelations | null>(null)
+    const [selectedStaffId, setSelectedStaffId] = useState("")
     const [totalAmount, setTotalAmount] = useState("")
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
@@ -45,7 +53,7 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
     // Form state for new appointment
     const [newForm, setNewForm] = useState({
         clientId: "",
-        barberId: "",
+        staffId: "",
         serviceId: "",
         date: "",
         time: "",
@@ -57,15 +65,15 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
 
     const closeModal = () => {
         setShowCompleteModal(false)
-        setSelectedAppointment(null)
-        setSelectedBarberId("")
+        setSelectedSale(null)
+        setSelectedStaffId("")
         setTotalAmount("")
         setError("")
     }
 
     const closeNewModal = () => {
         setShowNewModal(false)
-        setNewForm({ clientId: "", barberId: "", serviceId: "", date: "", time: "" })
+        setNewForm({ clientId: "", staffId: "", serviceId: "", date: "", time: "" })
         setError("")
     }
 
@@ -75,6 +83,7 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
             if (e.key === "Escape") {
                 closeModal()
                 closeNewModal()
+                // closeCancelModal if implemented
             }
         }
         window.addEventListener("keydown", onKeyDown)
@@ -90,24 +99,24 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
         }
     }, [showCompleteModal, showNewModal])
 
-    const handleComplete = (appointment: AppointmentWithRelations) => {
-        setSelectedAppointment(appointment)
+    const handleComplete = (appointment: SaleWithRelations) => {
+        setSelectedSale(appointment)
         setTotalAmount(appointment.service?.price?.toString() || "")
-        setSelectedBarberId(appointment.barberId || "")
+        setSelectedStaffId(appointment.staffId || "")
         setShowCompleteModal(true)
     }
 
     const submitComplete = async () => {
-        if (!selectedAppointment || !selectedBarberId) return
+        if (!selectedSale || !selectedStaffId) return
         setLoading(true)
         setError("")
 
         try {
-            const res = await fetch(`/api/appointments/${selectedAppointment.id}/complete`, {
+            const res = await fetch(`/api/appointments/${selectedSale.id}/complete`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    barberId: selectedBarberId,
+                    staffId: selectedStaffId,
                     totalAmount: parseFloat(totalAmount) || 0,
                 }),
             })
@@ -117,8 +126,8 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
                 return
             }
 
-            setAppointments(
-                appointments.map((a) => (a.id === selectedAppointment.id ? { ...a, status: "COMPLETED" as const } : a)),
+            setSales(
+                appointments.map((a) => (a.id === selectedSale.id ? { ...a, status: "COMPLETED" as const } : a)),
             )
             closeModal()
         } catch (err) {
@@ -129,8 +138,30 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
         }
     }
 
-    const submitNewAppointment = async () => {
-        if (!newForm.clientId || !newForm.barberId || !newForm.date || !newForm.time) {
+    const handleCancel = async (appointment: SaleWithRelations) => {
+        if (!confirm('¿Seguro que querés cancelar este turno? (Quedará tachado en la planilla)')) return;
+
+        try {
+            const res = await fetch(`/api/appointments/${appointment.id}/cancel`, {
+                method: "POST",
+            })
+
+            if (!res.ok) {
+                alert("No se pudo cancelar el turno")
+                return
+            }
+
+            setSales(
+                appointments.map((a) => (a.id === appointment.id ? { ...a, status: "CANCELED" as const } : a)),
+            )
+        } catch (err) {
+            console.error("Error canceling appointment:", err)
+            alert("Error al cancelar")
+        }
+    }
+
+    const submitNewSale = async () => {
+        if (!newForm.clientId || !newForm.staffId || !newForm.date || !newForm.time) {
             setError("Por favor completa todos los campos obligatorios.")
             return
         }
@@ -138,16 +169,16 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
         setError("")
 
         try {
-            const dateTime = `${newForm.date}T${newForm.time}:00`
-
             const res = await fetch("/api/appointments", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     clientId: newForm.clientId,
-                    barberId: newForm.barberId,
+                    staffId: newForm.staffId,
                     serviceId: newForm.serviceId || null,
-                    date: dateTime,
+                    service: services.find(s => s.id === newForm.serviceId)?.name || "", // Send name
+                    date: newForm.date,
+                    time: newForm.time,
                 }),
             })
 
@@ -157,22 +188,22 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
                 return
             }
 
-            const newAppointment = await res.json()
+            const newSale = await res.json()
 
             // Find related data for display
             const client = clients.find(c => c.id === newForm.clientId) || null
-            const barber = barbers.find(b => b.id === newForm.barberId) || null
+            const barber = barbers.find(b => b.id === newForm.staffId) || null
             const service = services.find(s => s.id === newForm.serviceId) || null
 
-            const appointmentWithRelations: AppointmentWithRelations = {
-                ...newAppointment,
-                totalAmount: newAppointment.totalAmount ? parseFloat(newAppointment.totalAmount.toString()) : null,
+            const appointmentWithRelations: SaleWithRelations = {
+                ...newSale,
+                totalAmount: newSale.totalAmount ? parseFloat(newSale.totalAmount.toString()) : null,
                 client,
                 barber,
                 service: service ? { ...service, price: service.price } : null,
             }
 
-            setAppointments([appointmentWithRelations, ...appointments])
+            setSales([appointmentWithRelations, ...appointments])
             closeNewModal()
         } catch (err) {
             console.error("Error creating appointment:", err)
@@ -224,7 +255,7 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
             ],
         },
         {
-            key: "barberId",
+            key: "staffId",
             label: "Peluquero",
             options: barberOptions,
         },
@@ -253,37 +284,37 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
             <DataTable
                 columns={[
                     {
-                         
-                        key: "client" as keyof AppointmentWithRelations,
-                        label: "Cliente",
+
+                        key: "client" as keyof SaleWithRelations,
+                        label: "Customere",
                         searchable: true,
                         sortable: true,
-                        render: (_, apt: AppointmentWithRelations) => apt.client?.name || "Sin cliente",
+                        render: (_, apt: SaleWithRelations) => apt.client?.name || "Sin cliente",
                     },
                     {
-                         
-                        key: "service" as keyof AppointmentWithRelations,
+
+                        key: "service" as keyof SaleWithRelations,
                         label: "Servicio",
                         searchable: true,
                         sortable: true,
-                        render: (_, apt: AppointmentWithRelations) => apt.service?.name || "Sin servicio",
+                        render: (_, apt: SaleWithRelations) => apt.service?.name || "Sin servicio",
                     },
                     {
-                         
-                        key: "barber" as keyof AppointmentWithRelations,
+
+                        key: "barber" as keyof SaleWithRelations,
                         label: "Peluquero",
                         searchable: true,
                         sortable: true,
-                        render: (_, apt: AppointmentWithRelations) => apt.barber?.name || "Sin asignar",
+                        render: (_, apt: SaleWithRelations) => apt.barber?.name || "Sin asignar",
                     },
                     {
-                        key: "scheduledStart",
+                        key: "dateTime",
                         label: "Fecha",
                         sortable: true,
                         render: (value) => value ? formatDate(value as Date | string) : '-',
                     },
                     {
-                        key: "scheduledStart",
+                        key: "dateTime",
                         label: "Hora",
                         align: "center",
                         render: (value) => value ? formatTime(value as Date | string) : '-',
@@ -309,14 +340,24 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
                         key: "id",
                         label: "Acción",
                         align: "center",
-                        render: (_, apt: AppointmentWithRelations) =>
-                            apt.status === "SCHEDULED" && (
-                                <button
-                                    onClick={() => handleComplete(apt)}
-                                    className="btn-primary text-xs py-1 px-3"
-                                >
-                                    Completar
-                                </button>
+                        render: (_, apt: SaleWithRelations) =>
+                            (apt.status === "SCHEDULED" || !apt.status) && (
+                                <div className="flex gap-2 justify-center">
+                                    <button
+                                        onClick={() => handleComplete(apt)}
+                                        className="btn-primary text-xs py-1 px-3"
+                                        title="Completar y cobrar"
+                                    >
+                                        ✓
+                                    </button>
+                                    <button
+                                        onClick={() => handleCancel(apt)}
+                                        className="btn-ghost text-xs py-1 px-3 text-error hover:bg-error/10"
+                                        title="Cancelar (Tachar)"
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
                             ),
                     },
                 ]}
@@ -330,7 +371,7 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
                 }}
             />
 
-            {/* New Appointment Modal */}
+            {/* New Sale Modal */}
             {showNewModal && (
                 <div className="fixed inset-0 z-50 p-4 flex items-center justify-center">
                     <button
@@ -363,7 +404,7 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
                         <div className="mt-6 space-y-4">
                             <div className="space-y-2">
                                 <label htmlFor="new-client" className="block text-sm font-medium">
-                                    Cliente <span className="text-accent">*</span>
+                                    Customere <span className="text-accent">*</span>
                                 </label>
                                 <select
                                     id="new-client"
@@ -387,8 +428,8 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
                                 </label>
                                 <select
                                     id="new-barber"
-                                    value={newForm.barberId}
-                                    onChange={(e) => setNewForm({ ...newForm, barberId: e.target.value })}
+                                    value={newForm.staffId}
+                                    onChange={(e) => setNewForm({ ...newForm, staffId: e.target.value })}
                                     className="input"
                                     required
                                 >
@@ -462,8 +503,8 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={submitNewAppointment}
-                                    disabled={loading || !newForm.clientId || !newForm.barberId || !newForm.date || !newForm.time}
+                                    onClick={submitNewSale}
+                                    disabled={loading || !newForm.clientId || !newForm.staffId || !newForm.date || !newForm.time}
                                     className="btn-primary flex-1"
                                 >
                                     {loading ? "Creando..." : "Crear turno"}
@@ -474,8 +515,8 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
                 </div>
             )}
 
-            {/* Complete Appointment Modal */}
-            {showCompleteModal && selectedAppointment && (
+            {/* Complete Sale Modal */}
+            {showCompleteModal && selectedSale && (
                 <div className="fixed inset-0 z-50 p-4 flex items-center justify-center">
                     <button
                         type="button"
@@ -496,7 +537,7 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
                                     Completar turno
                                 </h2>
                                 <p className="text-foreground-muted text-sm mt-1">
-                                    {selectedAppointment.service?.name || "Servicio"} · {selectedAppointment.client?.name || "Cliente"}
+                                    {selectedSale.service?.name || "Servicio"} · {selectedSale.client?.name || "Customere"}
                                 </p>
                             </div>
                             <button type="button" className="btn-ghost p-2 rounded-lg" onClick={closeModal} aria-label="Cerrar">
@@ -511,8 +552,8 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
                                 </label>
                                 <select
                                     id="complete-barber"
-                                    value={selectedBarberId}
-                                    onChange={(e) => setSelectedBarberId(e.target.value)}
+                                    value={selectedStaffId}
+                                    onChange={(e) => setSelectedStaffId(e.target.value)}
                                     className="input"
                                     required
                                 >
@@ -552,7 +593,7 @@ export function AppointmentsComponent({ initialAppointments, barbers, clients, s
                                 <button
                                     type="button"
                                     onClick={submitComplete}
-                                    disabled={loading || !selectedBarberId}
+                                    disabled={loading || !selectedStaffId}
                                     className="btn-primary flex-1"
                                 >
                                     {loading ? "Procesando..." : "Confirmar"}

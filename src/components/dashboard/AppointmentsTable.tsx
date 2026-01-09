@@ -15,9 +15,10 @@ interface Appointment {
   dateTime: string;
   customer: { name: string; phone: string } | null;
   staff: { name: string };
-  paymentMethod: string;
+  paymentMethod: string | null; // Make nullable
   totalAmount: number | null;
   servicesText: string;
+  status?: string; // Add status
 }
 
 interface AppointmentsTableProps {
@@ -29,12 +30,13 @@ export const AppointmentsTable = ({ appointments }: AppointmentsTableProps) => {
     return new Date(dateString).toLocaleString('es-AR');
   };
 
-  const getPaymentBadge = (method: string) => {
-    return method === 'CASH' 
-      ? 'Efectivo' 
-      : method === 'MP' 
-      ? 'Mercado Pago' 
-      : method;
+  const getPaymentBadge = (method: string | null) => {
+    if (!method) return <Badge variant="outline" className="text-gray-400">Pendiente</Badge>;
+    return method === 'CASH'
+      ? 'Efectivo'
+      : method === 'MP'
+        ? 'Mercado Pago'
+        : method;
   };
 
   return (
@@ -53,7 +55,7 @@ export const AppointmentsTable = ({ appointments }: AppointmentsTableProps) => {
         <TableBody>
           {appointments.length > 0 ? (
             appointments.map((apt) => (
-              <TableRow key={apt.id} className="hover:bg-gray-50">
+              <TableRow key={apt.id} className={`hover:bg-gray-50 ${apt.status === 'CANCELED' ? 'opacity-50 line-through bg-red-50' : ''}`}>
                 <TableCell>
                   <div>
                     <p className="font-medium">{apt.customer?.name || 'Sin cliente'}</p>
@@ -64,11 +66,9 @@ export const AppointmentsTable = ({ appointments }: AppointmentsTableProps) => {
                 <TableCell>{apt.servicesText}</TableCell>
                 <TableCell className="text-sm">{formatDate(apt.dateTime)}</TableCell>
                 <TableCell>
-                  <Badge variant="outline">
-                    {getPaymentBadge(apt.paymentMethod)}
-                  </Badge>
+                  {getPaymentBadge(apt.paymentMethod)}
                 </TableCell>
-                <TableCell className="font-semibold text-green-600">
+                <TableCell className={`font-semibold ${apt.status === 'CANCELED' ? 'text-gray-400' : 'text-green-600'}`}>
                   ${apt.totalAmount?.toFixed(2) || 'N/A'}
                 </TableCell>
               </TableRow>

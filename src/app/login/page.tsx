@@ -1,16 +1,32 @@
 "use client"
 
-import { useState } from "react"
-import { signIn } from "next-auth/react"
+import { useState, useEffect } from "react"
+import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 
 export default function LoginPage() {
+  const { status } = useSession()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+
+  // State for "Existing Account" spinner
+  const [isRedirecting, setIsRedirecting] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      setIsRedirecting(true)
+      // Delay for UX to show the message
+      const timer = setTimeout(() => {
+        router.push("/app")
+        router.refresh()
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [status, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,129 +42,127 @@ export default function LoginPage() {
 
       if (result?.error) {
         setError("Credenciales inválidas. Revisá tu email y contraseña.")
+        setLoading(false)
         return
       }
 
+      // Successful login
       router.push("/app")
       router.refresh()
     } catch {
       setError("No se pudo iniciar sesión. Intentá de nuevo en unos segundos.")
-    } finally {
       setLoading(false)
     }
   }
 
+  // Full screen spinner if already logged in
+  if (isRedirecting) {
+    return (
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white z-50">
+        <div className="w-12 h-12 border-4 border-neutral-800 border-t-yellow-500 rounded-full animate-spin mb-4" />
+        <h2 className="text-lg font-medium animate-pulse text-yellow-500">Ya hay una cuenta activa</h2>
+        <p className="text-neutral-500 text-sm mt-2">Redirigiendo al sistema...</p>
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 relative overflow-hidden" suppressHydrationWarning>
-      {/* Fondo oscuro con ligero dorado */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-neutral-950 to-black pointer-events-none" />
+    <div className="min-h-screen bg-[#000000] flex items-center justify-center px-4 sm:px-6 relative overflow-hidden font-sans text-neutral-200">
+      {/* Background patterns - Vercel style subtle grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
 
-      {/* Orbes dorados muy sutiles (máximo 10% del espacio) */}
-      <div className="absolute -top-40 -left-40 w-80 h-80 bg-yellow-600 rounded-full blur-3xl opacity-5 animate-pulse pointer-events-none" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-yellow-700 rounded-full blur-3xl opacity-4 animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
+      {/* Subtle 10% Gold Glow - Top Center */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-yellow-500/10 blur-[100px] rounded-full pointer-events-none opacity-50" />
 
-      <div className="w-full max-w-md z-10">
+      <div className="w-full max-w-[400px] z-10 relative">
         {/* Header */}
-        <div className="text-center mb-10">
-          <Link href="/" className="inline-block mb-4">
-            <div className="text-4xl font-bold tracking-tight">
-              <span className="text-white">Elvis</span>
-              <span className="text-yellow-500 ml-2">Barber</span>
+        <div className="mb-8 text-center">
+          <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
+            <div className="w-8 h-8 bg-neutral-900 border border-neutral-800 rounded-lg flex items-center justify-center group-hover:border-yellow-500/50 transition-colors">
+              <span className="font-serif font-bold text-yellow-500">E</span>
             </div>
+            <span className="text-xl font-bold tracking-tight text-white group-hover:text-yellow-500 transition-colors">
+              Elvis Barber
+            </span>
           </Link>
-          <p className="text-gray-400 text-sm">
-            Acceso al panel de gestión
+          <h1 className="text-2xl font-bold tracking-tight text-white mb-2">
+            Bienvenido de nuevo
+          </h1>
+          <p className="text-neutral-400 text-sm">
+            Ingresá tus credenciales para acceder al panel
           </p>
         </div>
 
-        {/* Card de Login */}
-        <div className="relative border border-neutral-800 rounded-2xl p-8 bg-neutral-950 backdrop-blur-sm overflow-hidden group">
-          {/* Borde dorado sutil en hover */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-600 to-transparent opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none" />
+        {/* Card */}
+        <div className="bg-neutral-900/30 border border-neutral-800 rounded-2xl p-6 backdrop-blur-sm shadow-2xl shadow-black/50">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="email" className="block text-xs font-medium text-neutral-300 uppercase tracking-widest">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="nombre@ejemplo.com"
+                required
+                className="w-full px-3 py-2 bg-black border border-neutral-800 rounded-md text-sm text-white focus:outline-none focus:ring-1 focus:ring-yellow-500/50 focus:border-yellow-500 transition-all placeholder:text-neutral-600"
+              />
+            </div>
 
-          {/* Contenido */}
-          <div className="relative z-10">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Email */}
-              <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-semibold text-white">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="tu@email.com"
-                  autoComplete="email"
-                  inputMode="email"
-                  required
-                  className="w-full px-4 py-3 bg-black border border-neutral-800 rounded-xl text-white placeholder-gray-600 focus:border-yellow-600 focus:ring-1 focus:ring-yellow-600/20 outline-none transition-all duration-200"
-                />
-              </div>
-
-              {/* Contraseña */}
-              <div className="space-y-2">
-                <label htmlFor="password" className="block text-sm font-semibold text-white">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="block text-xs font-medium text-neutral-300 uppercase tracking-widest">
                   Contraseña
                 </label>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  autoComplete="current-password"
-                  required
-                  className="w-full px-4 py-3 bg-black border border-neutral-800 rounded-xl text-white placeholder-gray-600 focus:border-yellow-600 focus:ring-1 focus:ring-yellow-600/20 outline-none transition-all duration-200"
-                />
               </div>
-
-              {/* Error Alert */}
-              {error && (
-                <div className="bg-red-950/30 border border-red-900/50 text-red-300 px-4 py-3 rounded-xl text-sm">
-                  {error}
-                </div>
-              )}
-
-              {/* Botón Submit */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full px-4 py-3 bg-yellow-600 hover:bg-yellow-500 text-black font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group/btn"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Ingresando...
-                  </>
-                ) : (
-                  "Iniciar sesión"
-                )}
-              </button>
-            </form>
-
-            {/* Footer */}
-            <div className="mt-8 text-center pt-8 border-t border-neutral-800">
-              <Link
-                href="/"
-                className="text-gray-400 hover:text-yellow-500 transition-colors text-sm font-medium"
-              >
-                ← Volver al inicio
-              </Link>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full px-3 py-2 bg-black border border-neutral-800 rounded-md text-sm text-white focus:outline-none focus:ring-1 focus:ring-yellow-500/50 focus:border-yellow-500 transition-all placeholder:text-neutral-600"
+              />
             </div>
-          </div>
+
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md flex items-center gap-2 text-red-400 text-xs">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-10 bg-white hover:bg-neutral-200 text-black font-medium text-sm rounded-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+            >
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                  <span>Ingresando...</span>
+                </>
+              ) : (
+                "Iniciar sesión"
+              )}
+            </button>
+          </form>
         </div>
 
-        {/* Credenciales de prueba */}
-        <div className="mt-8 p-4 bg-neutral-900/50 border border-neutral-800 rounded-xl">
-          <p className="text-gray-500 text-xs mb-3 font-semibold">CREDENCIALES DE PRUEBA:</p>
-          <div className="space-y-2 text-xs text-gray-400">
-            <p><span className="text-yellow-500 font-mono">admin@barber.com</span> / admin123</p>
-            <p><span className="text-yellow-500 font-mono">elvis@barber.com</span> / elvis123</p>
+        <p className="mt-8 text-center text-xs text-neutral-500">
+          ¿No tenés cuenta? <span className="text-yellow-500 hover:text-yellow-400 cursor-pointer transition-colors">Contactá al administrador</span>
+        </p>
+
+        {/* Credentials hints (can be removed in prod) */}
+        <div className="mt-8 p-3 bg-neutral-900/50 border border-neutral-800 rounded-lg">
+          <p className="text-[10px] text-neutral-500 font-mono mb-2 uppercase tracking-wider">Cuentas Demo</p>
+          <div className="flex flex-col gap-1 text-[11px] font-mono text-neutral-400">
+            <div className="flex justify-between"><span>admin@barber.com</span> <span className="text-neutral-600">admin123</span></div>
+            <div className="flex justify-between"><span>elvis@barber.com</span> <span className="text-neutral-600">elvis123</span></div>
           </div>
         </div>
       </div>
