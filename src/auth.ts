@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/prisma"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+    trustHost: true,
     session: {
         strategy: "jwt",
     },
@@ -21,6 +22,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 if (!credentials?.email || !credentials?.password) {
                     return null
                 }
+
+                // Bypass removido: Las cuentas ahora existen en la base de datos
+                // Se valida contra Prisma abajo
+
 
                 const user = await prisma.user.findUnique({
                     where: { email: credentials.email as string },

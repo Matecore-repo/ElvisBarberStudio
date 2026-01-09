@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function LoginPage() {
   const { status } = useSession()
@@ -16,6 +17,9 @@ export default function LoginPage() {
   const [isRedirecting, setIsRedirecting] = useState(false)
   const router = useRouter()
 
+  // Mouse position for spotlight effect
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+
   useEffect(() => {
     if (status === "authenticated") {
       setIsRedirecting(true)
@@ -27,6 +31,10 @@ export default function LoginPage() {
       return () => clearTimeout(timer)
     }
   }, [status, router])
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    setMousePos({ x: e.clientX, y: e.clientY })
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -67,23 +75,36 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#000000] flex items-center justify-center px-4 sm:px-6 relative overflow-hidden font-sans text-neutral-200">
+    <div
+      className="min-h-screen bg-[#000000] flex items-center justify-center px-4 sm:px-6 relative overflow-hidden font-sans text-neutral-200"
+      onMouseMove={handleMouseMove}
+    >
       {/* Background patterns - Vercel style subtle grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
 
-      {/* Subtle 10% Gold Glow - Top Center */}
+      {/* Golden Grid Spotlight */}
+      <div
+        className="absolute inset-0 bg-[linear-gradient(to_right,#eab30820_1px,transparent_1px),linear-gradient(to_bottom,#eab30820_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"
+        style={{
+          maskImage: `radial-gradient(350px circle at ${mousePos.x}px ${mousePos.y}px, black, transparent)`,
+          WebkitMaskImage: `radial-gradient(350px circle at ${mousePos.x}px ${mousePos.y}px, black, transparent)`,
+        }}
+      />
+
+      {/* Subtle 10% Gold Glow - Top Center fixed */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-yellow-500/10 blur-[100px] rounded-full pointer-events-none opacity-50" />
 
       <div className="w-full max-w-[400px] z-10 relative">
         {/* Header */}
-        <div className="mb-8 text-center">
-          <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
-            <div className="w-8 h-8 bg-neutral-900 border border-neutral-800 rounded-lg flex items-center justify-center group-hover:border-yellow-500/50 transition-colors">
-              <span className="font-serif font-bold text-yellow-500">E</span>
-            </div>
-            <span className="text-xl font-bold tracking-tight text-white group-hover:text-yellow-500 transition-colors">
-              Elvis Barber
-            </span>
+        <div className="mb-8 text-center flex flex-col items-center">
+          <Link href="/" className="mb-6 relative w-32 h-32 hover:scale-105 transition-transform duration-300">
+            <Image
+              src="/ElvisLogo.webp"
+              alt="Elvis Barber Studio"
+              fill
+              className="object-contain drop-shadow-2xl"
+              priority
+            />
           </Link>
           <h1 className="text-2xl font-bold tracking-tight text-white mb-2">
             Bienvenido de nuevo
@@ -169,4 +190,3 @@ export default function LoginPage() {
     </div>
   )
 }
-
